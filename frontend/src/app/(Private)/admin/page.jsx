@@ -1,8 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { job, job as jobdata } from '@/Data/jobsData'
 import { Link } from 'lucide-react'
-import { div } from 'framer-motion/client'
+
 
 
 const AdminPage = () => {
@@ -17,7 +16,8 @@ const AdminPage = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        credentials: "include"
       });
 
       if (!res.ok) {
@@ -41,7 +41,8 @@ const AdminPage = () => {
       method: "DELETE",
       headers: {
         "Content_Type": "application/json"
-      }
+      },
+      credentials: "include"
     });
 
     if (!response.ok) {
@@ -58,7 +59,8 @@ const AdminPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        credentials: "include"
       });
 
       const result = await response.json();
