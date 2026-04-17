@@ -19,7 +19,6 @@ const bottomMenu = [
 ];
 
 const SideBar = () => {
-    // const { isOpen, toggle } = useSidebar();
     const pathname = usePathname();
 
     return (

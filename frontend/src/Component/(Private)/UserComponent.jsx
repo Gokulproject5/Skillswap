@@ -31,7 +31,7 @@ const UserCard = ({ user, Loading }) => {
   }
   return (
 
-    <div className='text-gray-600 w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-5 shadow-sm hover:shadow-xl bg-white border border-gray-100 duration-300 group transition-all'>
+    <div className='text-gray-600  w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-5 shadow-sm hover:shadow-xl bg-white border border-gray-100 duration-300 group transition-all'>
 
 
 

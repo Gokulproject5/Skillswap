@@ -1,18 +1,20 @@
 import jwt from "jsonwebtoken";
 
-const secretKey = process.env.JWT_SECRET_KEY;
-
-
 export const auth = async (req, res, next) => {
-    
-    const token = req.cookies.auth_token; 
+    const authHeader = req.headers.Authorization || req.headers.authorization;
+
+
+    const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+
+    const cookieToken = req.cookies.auth_token;
+    const token = bearerToken || cookieToken;
 
     if (!token) {
         return res.status(401).json({ message: "Access denied. No token provided." });
     }
 
     try {
-        const verified = jwt.verify(token, secretKey);
+        const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.user = verified;
         next();
     } catch (err) {

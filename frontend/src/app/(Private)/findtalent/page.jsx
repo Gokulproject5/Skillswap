@@ -9,19 +9,23 @@ import { setUsers } from '@/feature/userSlice';
 const Page = () => {
   const [isActive, setActive] = useState("All");
   const [text, setText] = useState("");
-  const currentuser = useSelector((state) => state.loginData.currentUser)
+  const currentuser = useSelector((state) => state.loginData.currentUser);
+
   // Access redux
   const userData = useSelector((state) => state.userDatas.value) || [];
   const dispatch = useDispatch();
   const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const [loading , setLoading]=useState()
+  const [loading, setLoading] = useState(false);
+
   //  Fetch Users
   useEffect(() => {
     const getUser = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`${api_base_url}/user`, { method: "GET" });
+        const response = await fetch(`${api_base_url}/user`, { method: "GET", credentials: "include" });
         const result = await response.json();
+        console.log(result);
+        
         const data = await result.filter((data) => data._id !== currentuser._id)
         dispatch(setUsers(data));
 
@@ -89,8 +93,8 @@ const Page = () => {
                   key={btn}
                   onClick={() => setActive(btn)}
                   className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-200 whitespace-nowrap ${isActive === btn
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-white text-gray-600 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-200'
                     }`}
                 >
                   {btn}

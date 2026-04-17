@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Tooltip from "./Tooltip";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { navItems } from "@/Data/navItems";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import Input from './Input';
@@ -16,7 +16,8 @@ const Header = () => {
     const navigate = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const userData = useSelector((state) => state.loginData.currentUser)
-
+    const pathname = usePathname();
+    const isactive = pathname === "/profile"
     // props for input component
     const input = {
         type: "text",
@@ -62,7 +63,7 @@ const Header = () => {
                         <nav>
                             <ul className="flex items-center space-x-2 md:space-x-4 text-gray-700">
                                 {navItems.map(({ name, Icon, action, hasBadge }) => (
-                                    <li key={name} className="relative group flex items-center">
+                                    <li key={name} className="relative group flex justify-center items-center">
                                         <button
                                             onClick={() => action && dispatch(action())}
                                             className="rounded-full p-2 text-xl md:text-2xl transition-colors hover:bg-gray-100 focus:text-blue-500 focus:outline-none"
@@ -75,29 +76,31 @@ const Header = () => {
                                                 </span>
                                             )}
                                         </button>
-                                        <Tooltip title={name} style={"translate-y-9 left-0"} />
+                                        <Tooltip title={name} style={"translate-y-9 "} />
                                     </li>
                                 ))}
 
                                 <li className="flex items-center pl-2">
-                                    <Link href="/profile" className="group rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                    <Link href="/profile" className={`group rounded-full focus:outline-none focus:ring-2 relative flex items-center justify-center focus:ring-blue-600 ${isactive && "ring-2 ring-blue-600"}`}>
+                                        <Tooltip title={userData?.name} style={"translate-y-9 "} />
                                         <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
-                                          { userData?.profile_pic &&
-                                              <Image sizes="true"
-                                                   src={userData?.profile_pic || '/logo2.png'}
-                                                   alt="User"
-                                                   fill
-                                                   className="object-cover transition-transform group-hover:scale-110"
-                                               />
+                                            {userData?.profile_pic &&
+                                                <Image sizes="true"
+                                                    src={userData?.profile_pic || '/logo2.png'}
+                                                    alt="User"
+                                                    fill
+                                                    className="object-cover transition-transform group-hover:scale-110"
+                                                />
 
-                                          } 
+                                            }
                                         </div>
 
                                     </Link>
                                 </li>
                                 <li>
-                                    <button className="hover:bg-gray-100   p-2  text-gray-700 hover:text-red-500 rounded-full " onClick={handleLogout}>
+                                    <button className="hover:bg-gray-100 relative group  p-2  text-gray-700 hover:text-red-500 rounded-full " onClick={handleLogout}>
                                         <LogOut className="size-6" />
+                                        <Tooltip title={"Logout"} style={"translate-y-3 left-0"} />
                                     </button>
                                 </li>
                             </ul>

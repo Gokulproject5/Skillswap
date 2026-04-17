@@ -7,6 +7,7 @@ import User from "../models/user.model.js";
 
 // get user from db 
 export const getUser = async (req, res) => {
+    
     try {
         const user = await User.find().lean();
         const result = user.map(({ password, ...userWithoutPassword }) => userWithoutPassword);
@@ -58,7 +59,7 @@ export const createUser = async (req, res) => {
 
         res.cookie('auth_token', token, {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 3600000
         });
         res.status(201).json({

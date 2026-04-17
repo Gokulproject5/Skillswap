@@ -1,5 +1,4 @@
 import job_post from "../models/jobPost.model.js";
-import job_posts from "../models/jobPost.model.js";
 import '../utils/loadEnv.js'
 
 // create post 
@@ -9,7 +8,7 @@ export const CreateJobPost = async (req, res) => {
     if (!role || !company || !job_description || !skills || !work_type || !apply_link) {
         return res.status(400).json({
             message: "Invalid Input"
-        }); 
+        });
     }
 
     // data convert 
@@ -28,13 +27,13 @@ export const CreateJobPost = async (req, res) => {
         work_type: work_type,
         apply_link: apply_link,
         verify: false,
-        created_at: formattedDate
+        created_at: formattedDate,
     }
 
     try {
 
-        const result = await job_post.insertOne(sansitizeInput);
-        console.log("db", result)
+        await job_post.insertOne(sansitizeInput);
+
         if (!res) {
             return res.status(400).json({ message: "Failed to Upload" })
         }
@@ -49,7 +48,7 @@ export const CreateJobPost = async (req, res) => {
 // get job from db
 export const JobPost = async (req, res) => {
     try {
-        const job = await job_post.find({ verify: true });
+        const job = await job_post.find({ verify: true }).lean();
 
         res.status(200).json({
             message: "Successfully fetch data from db",

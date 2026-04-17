@@ -43,9 +43,9 @@ const Page = () => {
         const response = await fetch(`${api_base_url}/job_post`, {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
-
-          }
+            "Content-Type": "application/json"
+          },
+          credentials: "include"
         })
         const result = await response.json();
 
@@ -68,7 +68,8 @@ const Page = () => {
       const res = await fetch(`${api_base_url}/job_post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Data)
+        body: JSON.stringify(Data),
+        credentials: "include"
       });
 
       if (res.ok) {
@@ -199,15 +200,15 @@ const Page = () => {
                   <h2 className="text-xl font-extrabold text-gray-800 group-hover:text-blue-600 transition-colors">{job.role}</h2>
                   <p className="text-blue-600 font-bold text-sm tracking-tight">{job.company}</p>
                 </div>
-               <div className="flex items-center space-x-3">
-                 <div className="w-fit bg-blue-50 text-blue-600 font-bold rounded-lg py-1.5 px-4 text-[10px] uppercase tracking-widest border border-blue-100">
-                 {job.created_at}
+                <div className="flex items-center space-x-3">
+                  <div className="w-fit bg-blue-50 text-blue-600 font-bold rounded-lg py-1.5 px-4 text-[10px] uppercase tracking-widest border border-blue-100">
+                    {job.created_at}
+                  </div>
+                  <div className="w-fit bg-blue-50 text-blue-600 font-bold rounded-lg py-1.5 px-4 text-[10px] uppercase tracking-widest border border-blue-100">
+
+                    {job.work_type}
+                  </div>
                 </div>
-                <div className="w-fit bg-blue-50 text-blue-600 font-bold rounded-lg py-1.5 px-4 text-[10px] uppercase tracking-widest border border-blue-100">
-                  
-                  {job.work_type}
-                </div>
-               </div>
               </div>
               <div className="space-y-2">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Description</h3>

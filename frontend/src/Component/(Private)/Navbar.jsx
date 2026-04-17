@@ -20,7 +20,7 @@ const Navbar = () => {
                         <li key={menu.name} className="relative group">
                             {/* Tooltip */}
                             <div className="hidden md:block">
-                                <Tooltip title={menu.name} style={"left-full mr-5 top-1/2 -translate-y-1/2  translate-x-4 "} />
+                                <Tooltip title={menu.name} style={"left-full  top-1/2 -translate-y-1/2  translate-x-4 "} />
                             </div>
 
                             <Link

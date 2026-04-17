@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import  user from "../models/user.model.js";
+import user from "../models/user.model.js";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -34,17 +34,19 @@ export const loginAuth = async (req, res) => {
             { expiresIn: '1h' }
         );
 
-         res.cookie('auth_token',token,{
-            httpOnly:true,
-            sameSite:'strict',
-            maxAge:3600000
+        res.cookie('auth_token', token, {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600000,
         });
-
-       const { password: _, __v, ...userWithoutPassword } = userData;
+   
+     
+        
+        const { password: _, __v, ...userWithoutPassword } = userData;
 
         return res.status(200).json({
             message: "Login successful",
-            token,
             userData: userWithoutPassword
         });
 

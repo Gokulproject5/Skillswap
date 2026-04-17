@@ -1,8 +1,76 @@
-import React from 'react'
-import { job as jobdata } from '@/Data/jobsData'
+"use client"
+import React, { useEffect, useState } from 'react'
+import { job, job as jobdata } from '@/Data/jobsData'
 import { Link } from 'lucide-react'
+import { div } from 'framer-motion/client'
+
 
 const AdminPage = () => {
+  const [jobs, setJobs] = useState([]);
+
+  const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL
+
+  //  handle accept the job post 
+  const handleAccept = async (id) => {
+    try {
+      const res = await fetch(`${api_base_url}/admin/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!res.ok) {
+        alert("Error: Could not accept job")
+      }
+      alert("job accepted");
+
+      setJobs(prevJobs => prevJobs.filter(job => job._id !== id));
+
+    } catch (e) {
+      console.log(e);
+
+    }
+  }
+
+  // handle reject and delete  job post
+
+  const handleReject = async (id) => {
+
+    const response = await fetch(`${api_base_url}/admin/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content_Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      alert("Error: Could not delete job");
+      return;
+    }
+
+    alert("deleted the job");
+    setJobs(prevJobs => prevJobs.filter(job => job._id !== id));
+  }
+  useEffect(() => {
+    const jobFetch = async () => {
+      const response = await fetch(`${api_base_url}/admin`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      const result = await response.json();
+      setJobs(result.jobs)
+
+    }
+    jobFetch();
+  }, []);
+
+
+
+
   return (
     <section className='min-h-screen my-19 px-10 bg-white' id='admin_panel'>
       <div className='grid mx-auto px-4 md:px-20 py-10'>
@@ -49,42 +117,51 @@ const AdminPage = () => {
         <div className='py-10 px-2'>
           <div className='space-y-4'>
             <h3 className='text-2xl font-medium'>Jobs Approval</h3>
-            <ul className='space-y-3  py-3 overflow-y-auto h-125 bg-gray-50 rounded-xl border border-gray-100'>
-              {jobdata.slice(3, 11).map(({ role, company, work_type, skills }, index) => (
-                <li key={index} className='bg-white border border-gray-200 shadow-sm flex md:flex-row space-y-3 flex-col items-center justify-between py-2 px-2 md:px-6 md:py-4 rounded-2xl max-w-6xl mx-auto hover:border-blue-200 transition-colors'>
+            <ul className='space-y-3  py-3 overflow-y-auto  bg-gray-50 rounded-xl border border-gray-100'>
+              {
+                jobs.length > 0 ? (
+                  jobs.map(({ role, company, work_type, skills, _id, apply_link }, index) => (
+                    <li key={index} className='bg-white border border-gray-200 shadow-sm flex md:flex-row space-y-3 flex-col items-center justify-between py-2 px-2 md:px-6 md:py-4 rounded-2xl max-w-6xl mx-auto hover:border-blue-200 transition-colors'>
 
-                  {/* Left side*/}
-                  <div className='flex items-center space-x-6 flex-1 min-w-0'>
-                    <div className='min-w-37'>
-                      <h4 className='text-gray-900 font-medium truncate'>{role}</h4>
-                      <p className='text-xs text-gray-500'>{company}</p>
-                    </div>
+                      {/* Left side*/}
+                      <div className='flex items-center space-x-6 flex-1 min-w-0'>
+                        <div className='min-w-37'>
+                          <h4 className='text-gray-900 font-medium truncate'>{role}</h4>
+                          <p className='text-xs text-gray-500'>{company}</p>
+                        </div>
 
-                    {/* Skills */}
-                    <div className='hidden space-x-2 overflow-x-auto hide-scroll lg:flexflex-nowrap pb-1'>
-                      {skills.map((skill, sIdx) => (
-                        <span key={sIdx} className='whitespace-nowrap bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[10px] text-slate-600'>
-                          {skill}
+                        {/* Skills */}
+                        <div className='hidden space-x-2 overflow-x-auto hide-scroll lg:flexflex-nowrap pb-1'>
+                          {skills.map((skill, sIdx) => (
+                            <span key={sIdx} className='whitespace-nowrap bg-slate-50 border border-slate-200 px-3 py-1 rounded-md text-[10px] text-slate-600'>
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Right side */}
+                      <div className='flex items-center space-x-4 ml-4'>
+                        <span className='hidden sm:block bg-blue-50 border border-blue-100 text-blue-600 rounded-full text-xs font-medium py-1 px-4'>
+                          {work_type}
                         </span>
-                      ))}
+                        <a href={apply_link} target='_blank' className='text-gray-500 hover:text-blue-500'><Link /></a>
+                        <button onClick={() => { handleReject(_id) }} className='text-sm font-medium text-gray-500 hover:text-red-600 transition-colors'>
+                          Reject
+                        </button>
+                        <button onClick={() => { handleAccept(_id) }} className='bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-full text-sm font-medium text-white transition-all shadow-sm'>
+                          Accept
+                        </button>
+                      </div>
+                    </li>
+                  ))
+                ) :
+                  (
+                    <div className='text-lg py-4 px-5 text-gray-500 text-center '>
+                      <p>No Jobs Approval Pendings</p>
                     </div>
-                  </div>
-
-                  {/* Right side */}
-                  <div className='flex items-center space-x-4 ml-4'>
-                    <span className='hidden sm:block bg-blue-50 border border-blue-100 text-blue-600 rounded-full text-xs font-medium py-1 px-4'>
-                      {work_type}
-                    </span>
-                    <a href="" className='text-gray-500 hover:text-blue-500'><Link /></a>
-                    <button className='text-sm font-medium text-gray-500 hover:text-red-600 transition-colors'>
-                      Reject
-                    </button>
-                    <button className='bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-full text-sm font-medium text-white transition-all shadow-sm'>
-                      Accept
-                    </button>
-                  </div>
-                </li>
-              ))}
+                  )
+              }
             </ul>
           </div>
         </div>

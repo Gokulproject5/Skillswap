@@ -24,11 +24,18 @@ const job_posts = new Schema({
         type: String,
         required: true
     }],
-    verfiy:{
-        type:Boolean
+    apply_link: {
+        type: String,
+        required: true
+    },
+    verify: {
+        type: Boolean
+    },
+    created_at: {
+        type: String
     }
 });
 
-const job_post = model("job_posts",job_posts,"job_posts");
+const job_post = model("job_posts", job_posts, "job_posts");
 
 export default job_post
