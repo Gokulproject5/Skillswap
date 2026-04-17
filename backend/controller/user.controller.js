@@ -59,7 +59,7 @@ export const createUser = async (req, res) => {
 
         res.cookie('auth_token', token, {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite: 'none',
             maxAge: 3600000
         });
         res.status(201).json({

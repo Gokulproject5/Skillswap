@@ -17,6 +17,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 const port = 8608;
 
 const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
@@ -25,7 +26,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: allowedOrigin || " http://localhost:3000",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        credentials: true
     }
 })
 
@@ -35,7 +37,7 @@ app.use(cors({
     origin: allowedOrigin,
     credentials: true,
 }));
-app.use(express.json());
+
 
 
 // using middleware
