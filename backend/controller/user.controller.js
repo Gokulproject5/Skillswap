@@ -1,15 +1,15 @@
 import bcrypt from "bcrypt";
-import '../utils/loadEnv.js'
-import db from "../db/connection.db.js";
+import '../utils/loadEnv.js';
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken"
+import User from "../models/user.model.js";
 
 
 // get user from db 
 export const getUser = async (req, res) => {
     try {
-        const users = await db.collection("user").find().toArray();
-        const result = users.map(({ password, ...userWithoutPassword }) => userWithoutPassword);
+        const user = await User.find().lean();
+        const result = user.map(({ password, ...userWithoutPassword }) => userWithoutPassword);
         return res.json(result)
     } catch (err) {
         console.log(`error ${err}`);
@@ -24,9 +24,10 @@ export const createUser = async (req, res) => {
 
 
     try {
+
         // check db for existing user
-        const userExists = await db.collection("user").findOne({ email });
-        if (userExists) return res.status(400).json({ message: "User already exists" });
+        const user = await User.findOne({ email }).lean();
+        if (user) return res.status(400).json({ message: "User already exists" });
 
         // arrange data for structure DB format
         const newUserData = {
@@ -46,19 +47,19 @@ export const createUser = async (req, res) => {
 
         };
 
-       
+
 
         // push data in DB 
-        const response = await db.collection("user").insertOne(newUserData);
+        const response = await User.create(newUserData);
         const { insertedId } = response;
-         const token = jwt.sign({
-            id:insertedId
-        },process.env.JWT_SECRET_KEY,{expiresIn:"1h"});
+        const token = jwt.sign({
+            id: insertedId
+        }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
-        res.cookie('auth_token',token,{
-            httpOnly:true,
-            sameSite:'strict',
-            maxAge:3600000
+        res.cookie('auth_token', token, {
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: 3600000
         });
         res.status(201).json({
             message: "User Created successfull", insertedId
@@ -78,8 +79,8 @@ export const updateUser = async (req, res) => {
 
     try {
 
-        const result = await db.collection("user").updateOne(
-            { _id: new ObjectId(id) },
+        const result = await User.updateOne(
+            { _id: new ObjectId(id || req.body._id) },
             { $set: req.body }
         );
 

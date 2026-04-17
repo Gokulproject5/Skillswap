@@ -6,6 +6,16 @@ import { useForm } from 'react-hook-form';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiUser2Fill } from 'react-icons/ri';
+import * as z from 'zod';
+import { zodResolver} from "@hookform/resolvers/zod"
+
+
+// schema validation 
+ const schema =z.object( {
+  fullname: z.string().min(3,"Name must be  at least 3 characters"),
+  email:z.email({ pattern: /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i}),
+  password:z.string().min(6,"Password must be at least 6 characters")
+ });
 
 const SignUpCard = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -14,8 +24,11 @@ const SignUpCard = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver:zodResolver(schema),
+    });
 
     //  submit register form 
     const onSubmit = async (Formdata) => {

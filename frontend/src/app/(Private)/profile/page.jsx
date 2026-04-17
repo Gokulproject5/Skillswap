@@ -1,76 +1,94 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Edit3,
   Zap, Code, Database,
   CheckCircle2,
+  Verified,
 } from "lucide-react"
 import { useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import ProfileUpdate from '@/Component/(Private)/DialogForm';
+
+
 
 const Profile = () => {
-
   const user = useSelector((state) => state.loginData.currentUser)
+  const [offering, setOffering] = useState(user?.skills);
+  const [learning, setLearning] = useState(user?.seeking);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const { handleSubmit, register, formState: {
-    errors, isSubmitting
-  } } = useForm();
+
   const formatItems = (data) => {
     if (!data) return [];
     return Array.isArray(data) ? data : data.split(',').map(s => s.trim());
   };
 
+
+
+
+  const handleModal = () => {
+    setIsOpen(!isOpen)
+  }
+
+
+  const onSubmit = async (data) => {
+
+    const finalProfile = { ...data, skills: offering, seeking: learning };
+    const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    try {
+      const response = await fetch(`${api_base_url}/user/${user._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(finalProfile),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const res = await response.json();
+      alert("Profile Updated Successfully!");
+      handleModal();
+
+    } catch (error) {
+      console.error("Update error:", error);
+      alert(`Failed to update: ${error.message}`);
+    }
+  };
+
+
+
+  const data = {
+    isOpen,
+    handleModal,
+    onSubmit,
+    userDatas: user,
+    offering,
+    setOffering,
+    learning,
+    setLearning
+  }
+
   return (
     <div className="min-h-screen my-22 bg-[#F3F2EF] py-8 px-4  text-[#1d1d1d] antialiased">
+      < ProfileUpdate value={data} />
       <div className="max-w-6xl mx-auto grid grid-cols-1 ">
-
         {/* Main Section */}
         <div className="lg:col-span-3 space-y-3">
-          <div className="bg-white rounded-2xl border border-[#e0e0e0] overflow-hidden shadow-sm">
-            <div className="relative h-48 bg-radial-[at_top] from-blue-600 to-black">
 
-              <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-[#0a66c2] shadow-md hover:bg-slate-50 transition-colors">
+          <div className="bg-white rounded-2xl border border-[#e0e0e0] overflow-hidden shadow-sm">
+            <div className="relative h-48 bg-radial-[at_top] group from-blue-600 to-black">
+            
+              <button onClick={handleModal} className="absolute flex items-center justify-center hover:shadow-xl hover:shadow-black/50 hover:scale-105  hover:border-2 border-blue-700 top-4 right-4 p-2  rounded-full text-white shadow-md  transition-all">
+                
                 <Edit3 size={18} />
               </button>
             </div>
 
-            {/* edit dialog box */}
-            <dialog  className='w-[95%] md:w-full mx-auto my-auto max-w-2xl rounded-2xl p-0 overflow-hidden shadow-2xl backdrop:bg-black/80 backdrop:backdrop-blur-sm outline-none h-100 '>
 
-              <div className='flex items-center   px-6 md:px-8 py-5 border-b border-gray-100 bg-white' >
-                <div className='text-gray-700 font-semibold'>
-                  <h1>Profile Update</h1>
-                </div>
-              </div>
-
-              <form className='p-6 md:p-8 bg-white text-gray-800 max-h-[80vh] overflow-y-auto' onSubmit={handleSubmit()} action="">
-               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <div className='flex flex-col space-y-1.5'>
-                  <label className='uppercase text-[14px] font-bold ' htmlFor="">Full Name</label>
-                  <input {...register ("name", {required: "Required"})}
-                  placeholder='Enter a full name'
-                  className='outline-none shadow-inner p-2 ring-gray-100 rounded-md focus:ring-blue-500 ring-2  ' />
-                </div>
-
-                  <div className='flex flex-col space-y-1.5'>
-                  <label className='uppercase text-[14px] font-bold ' htmlFor=""> Age</label>
-                  <input type='number'  {...register ("name",{required: "Required" ,min:{value:18 , message:"Age must be at least 18"},
-                  minLength:{
-                    value:18 
-                  },
-                  maxLength:{
-                    value:40
-                  },
-                  max:{value:40 ,message:"Age must be under 40"},
-                valueAsNumber:true })}
-                  placeholder='Enter your Age'
-                  className='outline-none shadow-inner p-2 ring-gray-100 rounded-md focus:ring-blue-500 ring-2  ' />
-                </div>
-               </div>
-
-              </form>
-
-            </dialog>
             <div className="px-6 pb-6">
               <div className="flex justify-between items-start">
                 <div className="relative -mt-24 mb-4">
@@ -93,12 +111,14 @@ const Profile = () => {
                 <div className="md:col-span-2">
                   <div className="flex items-center gap-1">
                     <h1 className="text-2xl font-semibold">{user?.name || "User Name"}</h1>
-                    <span className="text-slate-500 text-sm font-normal ml-1">• 1st</span>
+
+                    <span className=" text-sm font-normal text-blue-600 animate-pulse ml-1"> <Verified /></span>
+
                   </div>
                   <p className="text-base text-slate-700 leading-tight mt-1">{user?.exp || ""}</p>
                   <div className="mt-2 flex flex-wrap gap-2 text-sm text-slate-500">
                     <span>{user?.loc}</span>
-                    <span className="text-[#0a66c2] font-semibold cursor-pointer">Contact info</span>
+
                   </div>
                 </div>
               </div>
@@ -122,7 +142,7 @@ const Profile = () => {
             <div className="bg-white rounded-2xl border border-[#e0e0e0] p-4 shadow-sm  w-full ">
               <h3 className="text-sm font-semibold text-slate-500 mb-4 uppercase tracking-tighter">Skill Verification</h3>
               <div className="space-y-4">
-                {/* Logic check to ensure verification array exists before accessing indices */}
+
                 {user?.verify && user.verify.length > 0 ? (
                   <>
                     <VerifyRow icon={<Zap size={16} />} label={user.verify[0] || ""} done />

@@ -40,7 +40,7 @@ const LoginCard = () => {
     const onSubmit = async (data) => {
         setIsSubmitting(true);
         try {
-            const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ;
+            const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             const res = await fetch(`${apiBaseUrl}/login/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -56,10 +56,10 @@ const LoginCard = () => {
                 return;
             }
 
+            const user = result.userData
+            dispatch(setuser(user));
+            sessionStorage.setItem("Login", JSON.stringify(user));
 
-            dispatch(setuser(result.user));
-            sessionStorage.setItem("Login", JSON.stringify(result.user));
-            // sessionStorage.setItem("token", result.token);
 
             route.replace('/dashboard');
 
@@ -149,7 +149,7 @@ const LoginCard = () => {
                             {/* Social Options */}
                             <div className="grid grid-cols-2 text-gray-600 gap-4">
                                 <button type="button" className="flex space-x-2 items-center justify-center py-2.5 border-2 border-gray-300 group rounded hover:text-white hover:bg-blue-500 transition-colors shadow-sm">
-                                    <FaGoogle  />
+                                    <FaGoogle />
                                     <span className='font-bold'>Google</span>
 
                                 </button>

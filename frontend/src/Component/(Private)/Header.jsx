@@ -82,19 +82,22 @@ const Header = () => {
                                 <li className="flex items-center pl-2">
                                     <Link href="/profile" className="group rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600">
                                         <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
-                                            <Image sizes="true"
-                                                src={userData?.profile_pic || '/logo2.png'}
-                                                alt="User"
-                                                fill
-                                                className="object-cover transition-transform group-hover:scale-110"
-                                            />
+                                          { userData?.profile_pic &&
+                                              <Image sizes="true"
+                                                   src={userData?.profile_pic || '/logo2.png'}
+                                                   alt="User"
+                                                   fill
+                                                   className="object-cover transition-transform group-hover:scale-110"
+                                               />
+
+                                          } 
                                         </div>
 
                                     </Link>
                                 </li>
                                 <li>
-                                    <button className="hover:bg-red-100 rounded-md py-2 px-3  text-gray-700 hover:text-red-500" onClick={handleLogout}>
-                                        <LogOut />
+                                    <button className="hover:bg-gray-100   p-2  text-gray-700 hover:text-red-500 rounded-full " onClick={handleLogout}>
+                                        <LogOut className="size-6" />
                                     </button>
                                 </li>
                             </ul>

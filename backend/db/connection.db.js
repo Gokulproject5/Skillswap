@@ -1,24 +1,22 @@
-import { MongoClient } from "mongodb";
 import dns from "node:dns/promises";
 import '../utils/loadEnv.js';
+import mongoose from "mongoose";
 
 dns.setServers(["1.1.1.1"]);
 
-const connectionString = process.env.MONGODB_URI ;
+const connectionString = process.env.MONGODB_URI;
 
-const client = new MongoClient(connectionString);
 
-let conn;
+try {
+    await mongoose.connect(connectionString, {
+        dbName: "user",
+    });
+    console.log("MongoDB is connected ,Mongoose ");
 
-try{
-    conn = await client.connect();
-    console.log("MongoDB is connected");
-    
-}catch(err){
+} catch (err) {
     console.log(`MongoDb is Not Connected ${err}`);
-    
+    process.exit(1);
 }
 
-let db = conn.db("user");
 
-export default db ;
+

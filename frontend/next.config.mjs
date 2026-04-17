@@ -14,6 +14,11 @@ const nextConfig = {
         port: '',
         pathname: '/api/portraits/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**', 
+      },
     ],
   },
 //  async redirects() {

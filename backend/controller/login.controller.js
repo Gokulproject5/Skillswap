@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import db from "../db/connection.db.js";
 import jwt from "jsonwebtoken";
+import  user from "../models/user.model.js";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -12,24 +12,24 @@ export const loginAuth = async (req, res) => {
     }
 
     if (!secretKey) {
-        return res.status(500).json({ message: "JWT secret is not configured" });
+        return res.status(500).json({ message: "JWT secret is missed" });
     }
 
     try {
         const normalizedEmail = email.trim().toLowerCase();
-        const user = await db.collection("user").findOne({ email: normalizedEmail });
+        const userData = await user.findOne({ email: normalizedEmail }).lean();
 
-        if (!user) {
+        if (!userData) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, userData.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { id: userData._id, email: userData.email },
             secretKey,
             { expiresIn: '1h' }
         );
@@ -40,12 +40,12 @@ export const loginAuth = async (req, res) => {
             maxAge:3600000
         });
 
-        const { password: _, ...userWithoutPassword } = user;
+       const { password: _, __v, ...userWithoutPassword } = userData;
 
         return res.status(200).json({
             message: "Login successful",
             token,
-            user: userWithoutPassword
+            userData: userWithoutPassword
         });
 
     } catch (err) {

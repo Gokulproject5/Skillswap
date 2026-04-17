@@ -1,5 +1,4 @@
 "use client"
-
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -9,8 +8,7 @@ const ProtectRoute = ({ children }) => {
 
     useEffect(() => {
         const loginAuth = sessionStorage.getItem("Login")
-        // const token = sessionStorage.getItem("token")
-
+    
         if (!loginAuth ) {
             navigate.replace("/auth/login")
         } else {

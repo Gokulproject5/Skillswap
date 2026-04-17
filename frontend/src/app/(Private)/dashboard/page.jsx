@@ -2,8 +2,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
+  const userData = useSelector((state) =>
+    state.loginData.currentUser
+  )
+
   const [modules, setModules] = useState([
     {
       title: "React.Js",
@@ -31,7 +36,7 @@ export default function Dashboard() {
   const handleRequest = (id, type) => {
     setRequests((prev) => prev.filter(req => req.id !== id));
     if (type === 'accept') {
-      
+
     }
   };
 
@@ -42,16 +47,16 @@ export default function Dashboard() {
       <header className="mb-8 md:mb-10 text-center md:text-left">
         <title>Dashboard</title>
         <h1 className="text-2xl md:text-4xl font-bold text-gray-900">
-          Welcome Back, <span className="text-blue-600">Gokul</span>
+          Welcome Back, <span className="text-blue-600">{userData?.name}</span>
         </h1>
         <p className="text-gray-500 text-xs md:text-sm mt-1">
           Monitor your skills and network progress here.
         </p>
       </header>
 
-      
+
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Left Section */}
         <div className="bg-white h-fit rounded-2xl lg:col-span-2 p-4 md:p-6 border border-gray-100 order-1 lg:order-1">
           <div className="flex justify-between items-center mb-6">
@@ -116,13 +121,13 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 w-full">
-                    <button 
+                    <button
                       onClick={() => handleRequest(id, 'accept')}
                       className="bg-blue-500 text-[11px] font-medium rounded-md py-1.5 text-white active:scale-95 transition-all"
                     >
                       Accept
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleRequest(id, 'reject')}
                       className="bg-gray-200 text-[11px] font-medium rounded-md py-1.5 text-gray-700 active:scale-95 transition-all"
                     >

@@ -85,9 +85,9 @@ User.skills == OtherUser.interests
 
 ## 6. Technology Stack
 
-| Layer     | Technology           |
+| Layer    | Technology           |
 |----------|----------------------|
-| Frontend | React.js             |
+| Frontend | Next.js              |
 | Backend  | Node.js + Express    |
 | Database | MongoDB              |
 | Auth     | JWT                  |
@@ -97,7 +97,7 @@ User.skills == OtherUser.interests
 
 ## 7. System Architecture
 
-React (Frontend)
+Next.js (Frontend)
 ↓
 Node.js + Express (API)
 ↓
