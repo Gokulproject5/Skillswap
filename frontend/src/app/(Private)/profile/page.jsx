@@ -43,6 +43,7 @@ const Profile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(finalProfile),
+        credentials: "include"
       });
 
       if (!response.ok) {

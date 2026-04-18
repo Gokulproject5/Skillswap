@@ -62,8 +62,6 @@ const LoginCard = () => {
             const user = result.userData
             dispatch(setuser(user));
             sessionStorage.setItem("Login", JSON.stringify(user));
-
-
             route.replace('/dashboard');
 
         } catch (error) {

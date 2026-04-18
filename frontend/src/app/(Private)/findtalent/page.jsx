@@ -24,8 +24,7 @@ const Page = () => {
         setLoading(true)
         const response = await fetch(`${api_base_url}/user`, { method: "GET", credentials: "include" });
         const result = await response.json();
-        console.log(result);
-        
+
         const data = await result.filter((data) => data._id !== currentuser._id)
         dispatch(setUsers(data));
 
