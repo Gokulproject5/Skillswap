@@ -1,7 +1,9 @@
 "use client"
 import Image from 'next/image';
-import React from 'react'
-import { MdCallMade, MdCallReceived, MdCancel } from "react-icons/md";
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react'
+import { MdCallMade, MdCallReceived } from "react-icons/md";
+import { useSelector } from 'react-redux';
 
 // datas
 const incomingRequests = [
@@ -10,12 +12,14 @@ const incomingRequests = [
   { id: 3, name: "Arjun", proposal: "Backend Architecture", skill: "Node.js", img: "https://i.pinimg.com/736x/62/2a/bd/622abdb66db47aa105401d8576bd98b2.jpg" },
 ];
 
-const RequestCard = ({ name, proposal, skill, btnText, btntext, img }) => (
+
+
+const RequestCard = ({ name, proposal, skill, btnText, request, btntext, img, accept, reject,slug }) => (
   <div className='flex flex-col md:flex-row md:justify-between md:items-center bg-white py-4 rounded-2xl px-4 shadow-sm hover:shadow-md transition-shadow gap-4'>
     <div className='flex items-center space-x-4'>
       <div className='relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border border-gray-100 shrink-0'>
         <Image
-          src={img}
+          src={img || "/fallback.jpg"}
           alt={name}
           sizes='true'
           fill
@@ -23,23 +27,27 @@ const RequestCard = ({ name, proposal, skill, btnText, btntext, img }) => (
         />
       </div>
       <div className='space-y-1'>
-        <h1 className='font-bold text-gray-800 text-sm md:text-base'>{name}</h1>
+        <Link href={`/findtalent/${slug}`} className='font-bold text-gray-800 text-sm md:text-base'>{name}</Link>
         <p className='text-xs md:text-sm text-gray-600'>
-          proposes exchange for <span className='text-blue-600 font-semibold'>{proposal}</span>
+          proposes exchange for <span className='text-blue-600 font-semibold'>{proposal.join(" , ")}</span>
         </p>
-        <div className='pt-1'>
-          <span className='bg-gray-100 text-gray-600 text-[10px] md:text-xs font-medium rounded-md py-1 px-2 border border-gray-200'>
-            {skill}
-          </span>
+        <div className='pt-1 space-x-2'>
+          {
+            skill.map((skill, index) => (
+              <span key={index} className='bg-gray-100 text-gray-600 text-[10px] md:text-xs font-medium rounded-md py-1 px-2 border border-gray-200'>
+                {skill}
+              </span>
+            ))
+          }
         </div>
       </div>
     </div>
 
     <div className='text-sm space-x-3 flex items-center justify-end md:justify-start'>
-      <button className='py-2 px-4 md:px-5 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors font-medium text-xs md:text-sm'>
+      <button type='button' onClick={() => { reject(request) }} className='py-2 px-4 md:px-5 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors font-medium text-xs md:text-sm'>
         {btnText}
       </button>
-      <button className='bg-blue-600 hover:bg-blue-700 py-2 px-4 md:px-5 rounded-full shadow-lg text-white transition-all active:scale-95 font-medium text-xs md:text-sm flex items-center justify-center min-w-10'>
+      <button type='button' onClick={() => { accept(request) }} className='bg-blue-600 hover:bg-blue-700 py-2 px-4 md:px-5 rounded-full shadow-lg text-white transition-all active:scale-95 font-medium text-xs md:text-sm flex items-center justify-center min-w-10'>
         {btntext}
       </button>
     </div>
@@ -47,6 +55,96 @@ const RequestCard = ({ name, proposal, skill, btnText, btntext, img }) => (
 );
 
 const Page = () => {
+
+  const [incomingRequest, setIncomingRequest] = useState([]);
+  const userId = useSelector((state) => state?.loginData?.currentUser?._id);
+
+  // handle accept the request
+  const handleAccept = async (requestId) => {
+
+    const accept = {
+      requestId: requestId,
+      action: "accepted"
+    }
+    try {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/handle-request`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(accept),
+        credentials: "include"
+      })
+
+      if (!response) {
+        alert("something went wrong")
+      }
+
+      alert("Request accepted")
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  // handle reject thr request 
+  const handleReject = async (requestId) => {
+
+    const accept = {
+      requestId: requestId,
+      action: "rejected"
+    }
+    try {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/handle-request`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(accept),
+        credentials: "include"
+      })
+
+      if (!response) {
+        alert("something went wrong")
+      }
+
+      alert("Request accepted")
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/my-request/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+
+          }, credentials: "include"
+        });
+
+        const result = await request.json();
+        console.log(result);
+
+        setIncomingRequest(result);
+
+
+
+      } catch (e) {
+        console.log("error:", e);
+
+      }
+    }
+    fetchRequest()
+  }, [])
+
+  console.log(incomingRequest);
+
   return (
     <div className={`transition-all text-gray-700 bg-gray-100 animate-page-entry duration-300 min-h-screen pt-24 md:pt-28 pb-10 px-4 md:px-12 lg:px-24 xl:px-40`}>
       <title>Requests</title>
@@ -71,24 +169,41 @@ const Page = () => {
 
           <div className='shrink-0'>
             <div className='bg-blue-100 text-blue-700 text-[10px] md:text-sm font-bold px-2 md:px-3 py-1 rounded-full'>
-              {incomingRequests.length} Pending
+              {incomingRequest.length || 0} Pending
             </div>
           </div>
         </div>
 
         {/* List of Requests */}
         <div className='space-y-4 mt-6'>
-          {incomingRequests.map((req) => (
-            <RequestCard
-              key={req.id}
-              name={req.name}
-              proposal={req.proposal}
-              skill={req.skill}
-              btnText={"Reject"}
-              btntext={"Accept"}
-              img={req.img}
-            />
-          ))}
+          {
+            incomingRequest?.length > 0 ? (
+
+              incomingRequest.map((req, index) => {
+                const { name, skills, _id, profile_pic, seeking,slug } = req.sender;
+                return (
+                  <RequestCard
+                    key={_id}
+                    name={name}
+                    proposal={seeking}
+                    skill={skills}
+                    btnText={"Reject"}
+                    reject={handleReject}
+                    btntext={"Accept"}
+                    accept={handleAccept}
+                    request={req._id}
+                    slug={slug}
+                    img={profile_pic}
+                  />
+                )
+              })
+
+            ) : (
+              <div className='bg-gray-200 flex items-center justify-center rounded-md min-h-20 h-full'>
+                <h1>No Incoming Request </h1>
+              </div>
+            )
+          }
         </div>
       </div>
 
@@ -102,14 +217,14 @@ const Page = () => {
 
           <div className='shrink-0'>
             <div className='bg-blue-100 text-blue-700 text-[10px] md:text-sm font-bold px-2 md:px-3 py-1 rounded-full'>
-              {incomingRequests.length} Pending
+              {/* {incomingRequests.length} Pending */}
             </div>
           </div>
         </div>
 
         {/* List of Requests */}
         <div className='space-y-4 mt-6'>
-          {incomingRequests.map((req) => (
+          {/* {incomingRequests.map((req) => (
             <RequestCard
               key={req.id}
               name={req.name}
@@ -119,7 +234,7 @@ const Page = () => {
               btntext={<MdCancel className="text-lg" />}
               img={req.img}
             />
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

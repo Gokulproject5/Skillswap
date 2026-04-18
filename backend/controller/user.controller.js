@@ -52,18 +52,20 @@ export const createUser = async (req, res) => {
 
         // push data in DB 
         const response = await User.create(newUserData);
-        const { insertedId } = response;
+        const { _id } = response;
+       
+        
         const token = jwt.sign({
-            id: insertedId
+            id: _id
         }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
         res.cookie('auth_token', token, {
             httpOnly: true,
             sameSite: 'none',
-            maxAge: 3600000
+            maxAge: 3600000,
         });
         res.status(201).json({
-            message: "User Created successfull", insertedId
+            message: "User Created successfull", _id
         });
 
     } catch (err) {

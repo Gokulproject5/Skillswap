@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
+import { json } from "zod/v4-mini";
 
 
 const Profile = () => {
@@ -18,12 +19,11 @@ const Profile = () => {
 
   // Fetch data from Redux store
   const userList = useSelector((state) => state.userDatas.value);
-
   // Get specific user data by slug
   const userdata = userList?.find((user) => user.slug === slug);
 
 
-  // Loading state if data isn't found yet
+  // Loading state 
   if (!userdata) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F3F2EF]">
@@ -35,6 +35,29 @@ const Profile = () => {
     );
   }
 
+  const handleRequest = async (receiverId) => {
+    const request = {
+
+      receiverId
+    }
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/send-request`, {
+        method: "Post",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify(request),
+        credentials: "include",
+
+      })
+      if (!response) {
+        return alert("error")
+      }
+      alert("Request sent")
+    } catch (error) {
+      alert(error)
+    }
+  }
   const verifyIcons = [
     <Zap size={16} />,
     <Code size={16} />,
@@ -61,7 +84,7 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <button className="px-4 py-1.5 bg-[#0a66c2] text-white rounded-full font-bold text-sm hover:bg-[#004182]">
+                  <button type="button" onClick={() => { handleRequest(userdata._id) }} className="px-4 py-1.5 bg-[#0a66c2] text-white rounded-full font-bold text-sm hover:bg-[#004182]">
                     Open to Swap
                   </button>
                 </div>

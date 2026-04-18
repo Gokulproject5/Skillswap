@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { model } from "mongoose";
 
 
@@ -21,14 +21,14 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, "Password is Required"],
-        
+
     },
     profile_pic: {
         type: String
     },
     exp: {
         type: String,
-        required: true
+
     },
     loc: {
         type: String
@@ -36,14 +36,14 @@ const userSchema = new Schema({
     skills: [
         {
             type: String,
-           
+
 
         }
     ],
     seeking: [
         {
             type: String,
-           
+
 
         }
 
@@ -55,12 +55,16 @@ const userSchema = new Schema({
     verify: [String],
     age: {
         type: Number
-    }
+    },
+    connection: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }]
 }, {
     timestamps: true
 });
 
 
-const User = model("User", userSchema,"user");
+const User = model("User", userSchema, "user");
 
 export default User;

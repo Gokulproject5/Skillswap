@@ -61,8 +61,9 @@ const SignUpCard = () => {
 
             }
             const result = await res.json()
-            alert("Register SuccessFull")
-            navigate.push(`/auth/setupprofile/${result.insertedId}`)
+            alert("Register SuccessFull");
+            
+            navigate.push(`/auth/setupprofile/${result._id}`)
         } catch (err) {
             alert("Regisiter failed" + err)
         }

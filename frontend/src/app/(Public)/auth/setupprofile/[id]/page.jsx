@@ -29,7 +29,6 @@ const SetupProfile = () => {
     try {
         const id = param.id; 
      
-        
         const response = await fetch(`${api_base_url}/user/${id}`, {
             method: 'PUT', 
             headers: {
@@ -49,7 +48,7 @@ const SetupProfile = () => {
         }
 
         alert("Profile update successful!");
-        route.push("/finduser");
+        route.push("/findtalent");
 
     } catch (err) {
         console.error(err);

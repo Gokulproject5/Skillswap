@@ -31,7 +31,7 @@ const UserCard = ({ user, Loading }) => {
   }
   return (
 
-    <div className='text-gray-600  w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-5 shadow-sm hover:shadow-xl bg-white border border-gray-100 duration-300 group transition-all'>
+    <div className='text-gray-600  w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-2 shadow-sm hover:shadow-xl bg-white border border-gray-100 duration-300 group transition-all'>
 
 
 
@@ -54,6 +54,12 @@ const UserCard = ({ user, Loading }) => {
           </div>
         </div>
 
+
+        {/* work or schooling */}
+
+        <div className='text-xs leading-3 tracking-tight  px-2 py-1'>
+          <p className='truncate'>{user.exp}</p>
+        </div>
         {/* Skills */}
         <div className='space-y-2'>
           <h1 className='font-bold text-[9px] md:text-[10px] uppercase tracking-widest text-gray-400'>Core Expertise</h1>
