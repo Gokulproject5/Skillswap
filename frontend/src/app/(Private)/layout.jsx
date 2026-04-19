@@ -4,6 +4,8 @@ import Navbar from "@/Component/(Private)/Navbar";
 import { Notify } from "@/Component/(Private)/Notify";
 import { ReduxProvider } from "@/redux/Provider";
 import ProtectRoute from "./protectRoute";
+import { ContextProvider } from "@/Context/SocketContext";
+import VideoCallOverlay from "@/Component/VideoCallOverlay";
 
 
 
@@ -15,11 +17,14 @@ export default function PrivateLayout({ children }) {
 
       <ReduxProvider>
          <ProtectRoute >
-           <Header />
-          <Navbar />
-          <Notify />
-          { children }
-          <Footer />
+           <ContextProvider>
+             <Header />
+             <Navbar />
+             <Notify />
+             <VideoCallOverlay />
+             { children }
+             <Footer />
+           </ContextProvider>
          </ProtectRoute>
       </ReduxProvider>
     </main>

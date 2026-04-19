@@ -57,7 +57,7 @@ const Page = () => {
       }
     }
     fetchData();
-  }, [dispatch,])
+  }, [dispatch])
 
   // post job handler
   const onSubmit = async (data) => {
@@ -76,13 +76,13 @@ const Page = () => {
 
         alert("Job created successfully!");
         close();
-
         const updatedResponse = await fetch(`${api_base_url}/job_post`);
         const result = await updatedResponse.json();
         dispatch(setJobs(result.data));
       } else {
 
         const errorData = await res.json();
+
         alert(`Failed to post: ${errorData.message || "Unknown error"}`);
       }
     } catch (err) {
@@ -194,10 +194,10 @@ const Page = () => {
       <div className="grid grid-cols-1 gap-6">
         {filteredJobs?.length > 0 ? (
           filteredJobs?.map((job, index) => (
-            <div key={index} className="bg-white rounded-3xl shadow-sm hover:shadow-xl p-6 md:p-8 border border-gray-100 transition-all group">
+            <div key={index} className="bg-white rounded-xl shadow-sm hover:shadow-xl p-6 md:p-8 border border-gray-100 transition-all group">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-xl font-extrabold text-gray-800 group-hover:text-blue-600 transition-colors">{job.role}</h2>
+                  <h2 className="text-xl font-extrabold text-gray-800 transition-colors">{job.role}</h2>
                   <p className="text-blue-600 font-bold text-sm tracking-tight">{job.company}</p>
                 </div>
                 <div className="flex items-center space-x-3">

@@ -14,12 +14,14 @@ import notifyReducer from "@/feature/notifySlice";
 import jobsReducer from "@/feature/jobSlice";
 import userDatasReducer from "@/feature/userSlice";
 import loginDataReducer from "@/feature/loginSlice";
+import requestReducer from "@/feature/requestSlice";
 
 const rootReducer = combineReducers({
   notify: notifyReducer,
   jobs: jobsReducer,
   userDatas: userDatasReducer,
   loginData: loginDataReducer,
+  request: requestReducer,
 });
 
 const persistConfig = {

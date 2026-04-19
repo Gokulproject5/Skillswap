@@ -65,7 +65,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen mt-20 relative bg-[#F3F2EF] py-8 px-4 text-[#1d1d1d] antialiased">
+    <div className="min-h-screen mt-20 relative bg-gray-100 py-8 px-4 text-gray-900 antialiased">
       <div className="max-w-6xl  mx-auto grid grid-cols-1">
         <div className="lg:col-span-3  space-y-3">
           {/* Header Card */}
@@ -77,8 +77,8 @@ const Profile = () => {
                 <div className="relative -mt-24 mb-4">
                   <div className="w-40 h-40 rounded-full border-4 border-white overflow-hidden bg-white shadow-sm">
                     <img
-                      src={userdata.profile_pic || "/api/placeholder/160/160"}
-                      alt={userdata.name}
+                      src={userdata.profile_pic || "/fallback.jpg"}
+                      alt={userdata.name ||""}
                       className="w-full h-full object-cover"
                     />
                   </div>

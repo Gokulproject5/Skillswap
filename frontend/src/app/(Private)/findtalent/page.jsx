@@ -5,6 +5,7 @@ import UserCard from '@/Component/(Private)/UserComponent';
 import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUsers } from '@/feature/userSlice';
+import { CardSkeleton, Skeleton } from '@/Component/(Private)/LoadingCom';
 
 const Page = () => {
   const [isActive, setActive] = useState("All");
@@ -27,6 +28,7 @@ const Page = () => {
 
         const data = await result.filter((data) => data._id !== currentuser._id)
         dispatch(setUsers(data));
+
 
         setLoading(false)
       } catch (err) {
@@ -104,18 +106,30 @@ const Page = () => {
 
           {/* Results Grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <UserCard key={user._id || user.id} user={user} Loading={loading} />
+            {loading ? (
+
+              Array.from({ length: 4 }).map((_, index) => (
+
+                <CardSkeleton key={index} />
               ))
-            ) : (
-              <div className="col-span-full py-20 text-center">
-                <p className="text-gray-400 italic">No talent found matching these criteria.</p>
-              </div>
-            )}
+
+            ) :
+
+              filteredUsers.length > 0 ? (
+                filteredUsers.map((user) => (
+                  <UserCard key={user._id || user.id} user={user} Loading={loading} />
+                ))
+              ) : (
+                <div className="col-span-full py-20 text-center">
+                  <p className="text-gray-400 italic">No talent found matching these criteria.</p>
+                </div>
+              )
+
+            }
           </div>
-        </section>
-      </div>
+
+        </section >
+      </div >
     </>
   )
 }

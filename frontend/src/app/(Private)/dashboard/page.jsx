@@ -8,6 +8,9 @@ export default function Dashboard() {
   const userData = useSelector((state) =>
     state.loginData.currentUser
   )
+  const requests = useSelector((state) =>
+    state.request.RequestData
+  )
 
   const [modules, setModules] = useState([
     {
@@ -18,20 +21,7 @@ export default function Dashboard() {
     },
   ]);
 
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      name: "Gokul",
-      des: "Wants to connect for React project...",
-      img: "https://i.pinimg.com/736x/23/57/24/235724d60503e6429c4a621f35a42fbe.jpg"
-    },
-    {
-      id: 2,
-      name: "Saran ",
-      des: "Wants to connect for Node js project...",
-      img: "https://i.pinimg.com/736x/82/92/d7/8292d7783cec70bd9e0671f9230eb1c0.jpg"
-    }
-  ]);
+
 
   const handleRequest = (id, type) => {
     setRequests((prev) => prev.filter(req => req.id !== id));
@@ -79,12 +69,12 @@ export default function Dashboard() {
 
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-in-out"
+                    className="bg-blue-600 h-2 animate-shimmer rounded-full transition-all duration-500 ease-in-out"
                     style={{ width: `${module.progress}%` }}
                   ></div>
                 </div>
 
-                <div className="flex justify-between text-[10px] font-medium">
+                <div className="flex justify-between  text-[10px] font-medium">
                   <span className="text-gray-400">
                     {module.progress}% Completed
                   </span>
@@ -107,35 +97,38 @@ export default function Dashboard() {
 
           <div className="space-y-4">
             {requests.length > 0 ? (
-              requests.map(({ id, name, img, des }) => (
-                <div key={id} className="flex flex-col items-start space-y-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors border border-gray-100">
-                  <div className="flex items-center space-x-3 w-full">
-                    <div className="shrink-0">
-                      <Image src={img} width={48} height={48} className="rounded-full object-cover h-12 w-12" alt={name} />
+              requests.map((req) => {
+                const { profile_pic, name, seeking, _id } = req.sender;
+                return (
+                  <div key={_id} className="flex flex-col items-start space-y-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors border border-gray-100">
+                    <div className="flex items-center space-x-3 w-full">
+                      <div className="shrink-0">
+                        <Image src={profile_pic || "/fallback.jpg"} width={48} height={48} className="rounded-full object-cover h-12 w-12" alt={name} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-sm text-gray-800 truncate">{name}</h3>
+                        <p className="text-[11px] text-gray-500 truncate">
+                          {seeking.join(" , ")}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm text-gray-800 truncate">{name}</h3>
-                      <p className="text-[11px] text-gray-500 truncate">
-                        {des}
-                      </p>
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                      <button
+                        onClick={() => handleRequest(id, 'accept')}
+                        className="bg-blue-500 text-[11px] font-medium rounded-md py-1.5 text-white active:scale-95 transition-all"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => handleRequest(id, 'reject')}
+                        className="bg-gray-200 text-[11px] font-medium rounded-md py-1.5 text-gray-700 active:scale-95 transition-all"
+                      >
+                        Reject
+                      </button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 w-full">
-                    <button
-                      onClick={() => handleRequest(id, 'accept')}
-                      className="bg-blue-500 text-[11px] font-medium rounded-md py-1.5 text-white active:scale-95 transition-all"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => handleRequest(id, 'reject')}
-                      className="bg-gray-200 text-[11px] font-medium rounded-md py-1.5 text-gray-700 active:scale-95 transition-all"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))
+                )
+              })
             ) : (
               <p className="text-center text-gray-400 text-xs py-4">No pending requests</p>
             )}

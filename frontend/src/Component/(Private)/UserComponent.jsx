@@ -1,40 +1,15 @@
-"use client";
 import React from 'react';
 import Image from 'next/image';
 import { BiUserCheck } from 'react-icons/bi';
 import Link from 'next/link';
+import { FiArrowRight } from 'react-icons/fi';
 
 const UserCard = ({ user, Loading }) => {
 
-  if (Loading) {
-    return <div className=' py-5  space-y-5  '>
-      <div className='bg-gray-300 max-w-xs shim h-40 px-5 py-5'>
-        <div className='flex justify-between items-center gap-5'>
-          <div className='bg-gray-50  rounded-full w-20 h-20'>
 
-          </div>
-          <div className='flex-1 space-y-5'>
-            <div className='flex-1 h-5 bg-gray-400 shim  rounded-md'>
-
-            </div>
-            <div className='flex-1 h-5 bg-gray-400 shim  rounded-md'>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div className='bg-gray-300 shim max-w-xs h-10'>
-
-      </div>
-    </div>
-  }
   return (
 
     <div className='text-gray-600  w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-2 shadow-sm hover:shadow-xl bg-white border border-gray-100 duration-300 group transition-all'>
-
-
-
 
       <div className='space-y-4'>
         {/* Header Section */}
@@ -45,6 +20,7 @@ const UserCard = ({ user, Loading }) => {
               src={user.profile_pic || "/fallback.jpg"}
               alt={user.name || "profile_img"}
               fill
+              loading='lazy'
               sizes="(max-width: 768px) 48px, 48px"
             />
           </div>
@@ -92,7 +68,7 @@ const UserCard = ({ user, Loading }) => {
           className={`w-full active:scale-95 duration-200 flex items-center gap-2 justify-center rounded py-2.5 text-xs md:text-sm font-bold transition-all shadow-sm 
             bg-blue-400 text-gray-50 border border-gray-200 cursor-default hover:bg-blue-500  `}
         >
-          <BiUserCheck className='text-lg' /> View profile
+          View profile  <FiArrowRight className='text-lg' />
 
         </Link>
       </div>

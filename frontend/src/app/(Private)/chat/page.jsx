@@ -8,7 +8,8 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import { io } from 'socket.io-client'
+import { io } from 'socket.io-client';
+import { SocketContext } from '@/Context/SocketContext';
 
 
 // ChatBox 
@@ -28,28 +29,16 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
   }, [messages]);
 
 
-  const socket = useRef(null);
+  const { callUser, setName } = React.useContext(SocketContext);
+
   useEffect(() => {
+    if (user?.name) {
+      setName(user.name);
+    }
+  }, [user]);
 
-
-    socket.current = io("http://localhost:5000");
-    socket.current.on("incoming_call_request", ({ fromName, roomId }) => {
-      const accept = window.confirm(`${fromName} is inviting you to a video call. Join?`);
-      if (accept) {
-        window.location.href = `/chat/videocall/${roomId}`;
-      }
-    });
-
-    return () => socket.current.disconnect();
-  }, []);
-
-
-  const handleVideoIconClick = (user) => {
-    socket.current.emit("initiate_call", {
-      toUserId: user.id,
-      fromName: "Gokul",
-      roomId: user.id
-    });
+  const handleVideoIconClick = (activeUser) => {
+    callUser();
   };
 
 

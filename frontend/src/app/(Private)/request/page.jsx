@@ -1,9 +1,10 @@
 "use client"
+import { setRequest } from '@/feature/requestSlice';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { MdCallMade, MdCallReceived } from "react-icons/md";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // datas
 const incomingRequests = [
@@ -14,7 +15,7 @@ const incomingRequests = [
 
 
 
-const RequestCard = ({ name, proposal, skill, btnText, request, btntext, img, accept, reject,slug }) => (
+const RequestCard = ({ name, proposal, skill, btnText, request, btntext, img, accept, reject, slug }) => (
   <div className='flex flex-col md:flex-row md:justify-between md:items-center bg-white py-4 rounded-2xl px-4 shadow-sm hover:shadow-md transition-shadow gap-4'>
     <div className='flex items-center space-x-4'>
       <div className='relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border border-gray-100 shrink-0'>
@@ -55,10 +56,10 @@ const RequestCard = ({ name, proposal, skill, btnText, request, btntext, img, ac
 );
 
 const Page = () => {
-
-  const [incomingRequest, setIncomingRequest] = useState([]);
   const userId = useSelector((state) => state?.loginData?.currentUser?._id);
+  const stated = useSelector((state) => state?.request?.RequestData);
 
+  const dispatch = useDispatch();
   // handle accept the request
   const handleAccept = async (requestId) => {
 
@@ -129,11 +130,8 @@ const Page = () => {
         });
 
         const result = await request.json();
-        console.log(result);
 
-        setIncomingRequest(result);
-
-
+        dispatch(setRequest(result))
 
       } catch (e) {
         console.log("error:", e);
@@ -143,7 +141,7 @@ const Page = () => {
     fetchRequest()
   }, [])
 
-  console.log(incomingRequest);
+
 
   return (
     <div className={`transition-all text-gray-700 bg-gray-100 animate-page-entry duration-300 min-h-screen pt-24 md:pt-28 pb-10 px-4 md:px-12 lg:px-24 xl:px-40`}>
@@ -169,7 +167,7 @@ const Page = () => {
 
           <div className='shrink-0'>
             <div className='bg-blue-100 text-blue-700 text-[10px] md:text-sm font-bold px-2 md:px-3 py-1 rounded-full'>
-              {incomingRequest.length || 0} Pending
+              {stated.length || 0} Pending
             </div>
           </div>
         </div>
@@ -177,10 +175,10 @@ const Page = () => {
         {/* List of Requests */}
         <div className='space-y-4 mt-6'>
           {
-            incomingRequest?.length > 0 ? (
+            stated?.length > 0 ? (
 
-              incomingRequest.map((req, index) => {
-                const { name, skills, _id, profile_pic, seeking,slug } = req.sender;
+              stated.map((req, index) => {
+                const { name, skills, _id, profile_pic, seeking, slug } = req.sender;
                 return (
                   <RequestCard
                     key={_id}
