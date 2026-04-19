@@ -1,15 +1,14 @@
 "use client"
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import { BiPaperclip, BiSolidVideo, BiArrowBack } from 'react-icons/bi';
 import { IoCallSharp, IoSend } from 'react-icons/io5';
 import { MdMoreVert } from 'react-icons/md';
-import { userChat } from '@/Data/chatData';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
+import { useSelector, useDispatch } from 'react-redux';
 import { SocketContext } from '@/Context/SocketContext';
+import { setUsers } from '@/feature/userSlice';
 
 
 // ChatBox 
@@ -29,7 +28,7 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
   }, [messages]);
 
 
-  const { callUser, setName } = React.useContext(SocketContext);
+  const { callUser, setName } = useContext(SocketContext);
 
   useEffect(() => {
     if (user?.name) {
@@ -38,7 +37,8 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
   }, [user]);
 
   const handleVideoIconClick = (activeUser) => {
-    callUser();
+    const targetUserId = activeUser?._id || activeUser?.id || activeUser?.name;
+    callUser(targetUserId);
   };
 
 
@@ -52,7 +52,7 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
           </button>
 
           <div className='relative'>
-            <img src={activeUser?.img} alt="" className='w-10 h-10 rounded-full object-cover ring-2 ring-gray-100' />
+            <img src={activeUser?.profile_pic || '/fallback.jpg'} alt="" className='w-10 h-10 rounded-full object-cover ring-2 ring-gray-100' />
             {activeUser?.lastSeen === "Active" && (
               <span className='absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full'></span>
             )}
@@ -117,47 +117,127 @@ const Page = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [inputText, setInputText] = useState("");
   const [showChat, setShowChat] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [chatHistories, setChatHistories] = useState({
-    [userChat[0].name]: [
-      { id: 1, text: "Hey bro! How are you?", sender: "them", time: "9:00 AM" },
-      { id: 2, text: "I'm good da 😄", sender: "gokul", time: "9:02 AM" },
-      { id: 3, text: "Working on MERN project", sender: "gokul", time: "9:05 AM" },
-    ],
+  const user = useSelector((state) => state.loginData.currentUser);
+  const dbUsers = useSelector((state) => state.userDatas.value) || [];
+  const [chatUsers, setChatUsers] = useState([]);
+  const dispatch = useDispatch();
+  const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const { callUser, setName, socket } = useContext(SocketContext);
 
-    [userChat[1].name]: [
-      { id: 1, text: "Hello!", sender: "them", time: "10:00 AM" },
-      { id: 2, text: "Started learning Photoshop 🎨", sender: "gokul", time: "10:01 AM" },
-      { id: 3, text: "Nice! Show me your work", sender: "them", time: "10:03 AM" },
-    ],
+  // 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${api_base_url}/user`, { method: "GET", credentials: "include" });
+        const result = await response.json();
+        const data = result.filter((d) => d._id !== user._id);
+        dispatch(setUsers(data));
+      } catch (err) {
+        console.error("Failed to fetch users:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (dbUsers.length === 0) {
+      fetchUsers();
+    } else {
+      setLoading(false);
+    }
+  }, [dispatch, api_base_url, user?._id]);
 
-    [userChat[2].name]: [
-      { id: 1, text: "Hey Gokul!", sender: "them", time: "11:00 AM" },
-      { id: 2, text: "Yes tell me?", sender: "gokul", time: "11:02 AM" },
-      { id: 3, text: "Need help with React state", sender: "them", time: "11:05 AM" },
-    ],
-    [userChat[3].name]: [
-      { id: 1, text: "Hey Gokul!", sender: "them", time: "11:00 AM" },
-      { id: 2, text: "Yes tell me?", sender: "gokul", time: "11:02 AM" },
-      { id: 3, text: "Need help with React state", sender: "them", time: "11:05 AM" },
-    ],
-  });
+  // connection data
+  useEffect(() => {
 
-  const activeUser = userChat[activeIndex];
-  const currentMessages = chatHistories[activeUser.name] || [];
+    if (dbUsers.length > 0) {
+      const connections = dbUsers.filter((d) => user?.connection?.includes(d._id) || [].includes(d._id));
+
+      setChatUsers(user?.connection?.length > 0 ? connections : dbUsers);
+    }
+  }, [dbUsers, user]);
+
+  // socket 
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleReceiveMessage = (data) => {
+      const senderUser = dbUsers.find(u => u._id === data.from);
+      if (senderUser) {
+        const newMessage = {
+          id: Date.now(),
+          text: data.text,
+          sender: "them",
+          time: data.time
+        };
+        setChatHistories(prev => ({
+          ...prev,
+          [senderUser.name]: [...(prev[senderUser.name] || []), newMessage]
+        }));
+      }
+    };
+
+    socket.on("receiveMessage", handleReceiveMessage);
+    return () => socket.off("receiveMessage", handleReceiveMessage);
+  }, [socket, dbUsers]);
+
+  const [chatHistories, setChatHistories] = useState({});
+
+  const activeUser = chatUsers[activeIndex];
+
+  // Fetch  chat history in db
+  useEffect(() => {
+    if (activeUser && user) {
+      const fetchChatHistory = async () => {
+        try {
+          const response = await fetch(`${api_base_url}/message/${user._id}/${activeUser._id}`, { credentials: 'include' });
+          const messages = await response.json();
+         
+          const formattedMessages = messages.map(msg => ({
+            id: msg._id,
+            text: msg.text,
+            sender: msg.sender === user._id ? 'gokul' : 'them',
+            time: msg.time
+          }));
+          setChatHistories(prev => ({
+            ...prev,
+            [activeUser.name]: formattedMessages
+          }));
+        } catch (error) {
+          console.error("Error fetching chat:", error);
+        }
+      };
+
+      if (!chatHistories[activeUser.name]) {
+        fetchChatHistory();
+      }
+    }
+  }, [activeUser, user, api_base_url]);
+
+ 
+  const currentMessages = activeUser ? (chatHistories[activeUser.name] || []) : [];
 
   const handleSendMessage = () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || !activeUser) return;
+    const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     const newMessage = {
       id: Date.now(),
       text: inputText,
       sender: "gokul",
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      time: timeNow
     };
+
     setChatHistories(prev => ({
       ...prev,
       [activeUser.name]: [...(prev[activeUser.name] || []), newMessage]
     }));
+
+    if (socket) {
+      socket.emit('sendMessage', { to: activeUser._id, text: inputText, time: timeNow });
+    }
+
     setInputText("");
   };
 
@@ -172,29 +252,33 @@ const Page = () => {
           <div className='p-6 pb-2'>
             <h1 className='text-2xl font-bold text-gray-800'>Chats</h1>
             <div className="mt-4 relative">
-              <input type="text" placeholder="Search chats..." className="w-full bg-gray-50 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100" />
+              <input type="text" placeholder="Search chats..." className="w-full bg-gray-50 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none" />
             </div>
           </div>
 
           <div className='flex-1 overflow-y-auto px-2 py-4 space-y-1 '>
-            {userChat.map((user, index) => {
-              const messages = chatHistories[user.name] || [];
-              const lastMsg = messages.length > 0 ? messages[messages.length - 1] : { text: user.lastMessage, time: "" };
+            {loading ? (
+              <div className="p-4 text-center text-sm text-gray-500">Loading chats...</div>
+            ) : chatUsers.length === 0 ? (
+              <div className="p-4 text-center text-sm text-gray-400">No active connections found.</div>
+            ) : chatUsers.map((chatUser, index) => {
+              const messages = chatHistories[chatUser.name] || [];
+              const lastMsg = messages.length > 0 ? messages[messages.length - 1] : { text: "Say Hi!", time: "" };
 
               return (
                 <div
-                  key={index}
+                  key={chatUser._id || index}
                   onClick={() => { setActiveIndex(index); setShowChat(true); }}
                   className={`flex items-center p-3 cursor-pointer rounded-xl transition-all
                     ${activeIndex === index ? "bg-blue-50" : "hover:bg-gray-50"}`}
                 >
-                  <div className='relative  shrink-0 w-10 h-10'>
-                    <Image src={user.img} sizes='true' fill alt="" className={`w-12 h-12 rounded-full object-cover ${activeIndex === index ? "ring-2 ring-blue-500" : "ring-1 ring-gray-200"}`} />
-                    {user.lastSeen === "Active" && <span className='absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full'></span>}
+                  <div className='relative shrink-0 w-12 h-12'>
+                    <Image src={chatUser.profile_pic || '/fallback.jpg'} sizes='true' fill alt="" className={`w-12 h-12 rounded-full object-cover ${activeIndex === index ? "ring-2 ring-blue-500" : "ring-1 ring-gray-200"}`} />
+                    {chatUser.lastSeen === "Active" && <span className='absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full'></span>}
                   </div>
                   <div className="ml-3 flex-1 min-w-0">
                     <div className="flex justify-between items-baseline">
-                      <h3 className={`font-bold truncate text-sm ${activeIndex === index ? "text-blue-700" : "text-gray-800"}`}>{user.name}</h3>
+                      <h3 className={`font-bold truncate text-sm ${activeIndex === index ? "text-blue-700" : "text-gray-800"}`}>{chatUser.name}</h3>
                       <span className="text-[10px] text-gray-400 shrink-0">{lastMsg.time || 'now'}</span>
                     </div>
                     <p className={`text-xs truncate ${activeIndex === index ? "text-blue-600/70" : "text-gray-500"}`}>
@@ -212,7 +296,7 @@ const Page = () => {
           <AnimatePresence mode="wait">
             {showChat ? (
               <motion.div
-                key={activeUser.name}
+                key={activeUser?.name || 'empty'}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}

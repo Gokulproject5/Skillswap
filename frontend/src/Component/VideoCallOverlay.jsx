@@ -4,12 +4,35 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '@/Context/SocketContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoCall, IoClose } from 'react-icons/io5';
-import { MdVideoCall, MdCallEnd } from 'react-icons/md';
+import { MdVideoCall, MdCallEnd, MdMic, MdMicOff, MdVideocam, MdVideocamOff } from 'react-icons/md';
+import { PresentationIcon } from 'lucide-react';
 
 const VideoCallOverlay = () => {
-  const { call, callAccepted, myVideo, userVideo, callEnded, answerCall, leaveCall, setupMedia, stream } = useContext(SocketContext);
+  const { call, callAccepted, myVideo, userVideo, callEnded, answerCall, leaveCall, setupMedia, stream, isScreenSharing, toggleScreenShare } = useContext(SocketContext);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMicOn, setIsMicOn] = useState(true);
+  const [isCamOn, setIsCamOn] = useState(true);
+
+  const toggleMic = () => {
+    if (stream) {
+      const audioTrack = stream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !audioTrack.enabled;
+        setIsMicOn(audioTrack.enabled);
+      }
+    }
+  };
+
+  const toggleCam = () => {
+    if (stream) {
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !videoTrack.enabled;
+        setIsCamOn(videoTrack.enabled);
+      }
+    }
+  };
 
   
   const showIncomingCall = call.isReceivingCall && !callAccepted;
@@ -94,7 +117,27 @@ const VideoCallOverlay = () => {
               </motion.div>
 
               {/* Controls */}
-              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-6 px-8 py-4 bg-gray-900/60 backdrop-blur-md rounded-full border border-white/10 z-20">
+              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4 px-6 py-3 bg-gray-900/60 backdrop-blur-md rounded-full border border-white/10 z-20">
+                <button
+                  onClick={toggleMic}
+                  className={`w-12 h-12 rounded-full flex justify-center items-center text-white transition-all hover:scale-105 active:scale-95 ${isMicOn ? 'bg-gray-700 hover:bg-gray-600' : 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30'}`}
+                >
+                  {isMicOn ? <MdMic size={24} /> : <MdMicOff size={24} />}
+                </button>
+                <button
+                  onClick={toggleCam}
+                  className={`w-12 h-12 rounded-full flex justify-center items-center text-white transition-all hover:scale-105 active:scale-95 ${isCamOn ? 'bg-gray-700 hover:bg-gray-600' : 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30'}`}
+                >
+                  {isCamOn ? <MdVideocam size={24} /> : <MdVideocamOff size={24} />}
+                </button>
+                <button
+                  onClick={toggleScreenShare}
+                  title="Share Screen"
+                  className={`w-12 h-12 rounded-full flex justify-center items-center text-white transition-all hover:scale-105 active:scale-95 ${isScreenSharing ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/30' : 'bg-gray-700 hover:bg-gray-600'}`}
+                >
+                  <PresentationIcon size={20} />
+                </button>
+                <div className="w-px h-8 bg-white/20 mx-2"></div>
                 <button
                   onClick={leaveCall}
                   className="w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full flex justify-center items-center text-white shadow-lg shadow-red-500/30 transition-all hover:scale-105 active:scale-95"

@@ -21,7 +21,7 @@ const Page = () => {
     const connectionRef = useRef()
 
     useEffect(() => {
-        socket.current = io("http://localhost:8608");
+        socket.current = io(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((currentStream) => {
             setStream(currentStream);
@@ -75,7 +75,7 @@ const Page = () => {
 
             <main>
                 <div className='grid grid-cols-1 md:grid-cols-2 md:px-10 h-full px-3 py-10 gap-10'>
-                    {/* Your Video (Local) */}
+                    {/* me */}
                     <div className='md:w-full drop-shadow-2xl absolute z-10 md:relative bottom-0 right-4 w-50 h-50 max-w-4xl overflow-hidden md:h-100 rounded-3xl bg-black'>
                         <video playsInline muted ref={myVideo} autoPlay className='w-full h-full object-cover' />
                         <div className='absolute text-white font-bold bottom-4 left-4 bg-black/30 px-4 py-2 rounded-full'>
@@ -83,7 +83,7 @@ const Page = () => {
                         </div>
                     </div>
 
-                    {/* Peer Video (Remote) */}
+                    {/* user */}
                     <div className='w-full h-full min-h-150 md:min-h-100 overflow-hidden rounded-3xl relative bg-black'>
                         <video playsInline ref={userVideo} autoPlay className='w-full h-full object-cover' />
                         <div className='absolute text-white font-bold bottom-4 left-4 bg-black/30 px-4 py-2 rounded-full'>

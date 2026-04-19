@@ -6,5 +6,4 @@ const login = express.Router();
 
 login.post("/",loginAuth);
 
-
-export default login
+export default login ;

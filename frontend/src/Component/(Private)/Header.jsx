@@ -10,6 +10,7 @@ import { HiMenuAlt3, HiX } from "react-icons/hi";
 import Input from './Input';
 import { LogOut } from "lucide-react";
 import { clearUser } from "@/feature/loginSlice";
+import { HiMiniUsers } from "react-icons/hi2";
 
 
 const Header = () => {
@@ -17,7 +18,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const userData = useSelector((state) => state.loginData.currentUser)
     const pathname = usePathname();
-    const isactive = pathname === "/profile"
+    const isactive = pathname
     // props for input component
     const input = {
         type: "text",
@@ -62,6 +63,9 @@ const Header = () => {
                     <div className="hidden md:block select-none cursor-pointer">
                         <nav>
                             <ul className="flex items-center space-x-2 md:space-x-4 text-gray-700">
+                                <Link href={"/connection"} className={`relative group hover:bg-gray-100 flex ${isactive === "/connection" && "text-blue-500"} justify-center items-center rounded-full p-2`}><HiMiniUsers className="size-6" />
+                                    <Tooltip title={"Connection"} style={"translate-y-9"} />
+                                </Link>
                                 {navItems.map(({ name, Icon, action, hasBadge }) => (
                                     <li key={name} className="relative group flex justify-center items-center">
                                         <button
@@ -81,18 +85,18 @@ const Header = () => {
                                 ))}
 
                                 <li className="flex items-center pl-2">
-                                    <Link href="/profile" className={`group rounded-full focus:outline-none focus:ring-2 relative flex items-center justify-center focus:ring-blue-600 ${isactive && "ring-2 ring-blue-600"}`}>
+                                    <Link href="/profile" className={`group rounded-full focus:outline-none focus:ring-2 relative flex items-center justify-center focus:ring-blue-600 ${isactive === "/profile" && "ring-2 ring-blue-600"}`}>
                                         <Tooltip title={userData?.name} style={"translate-y-9 "} />
                                         <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
-                                            {userData?.profile_pic &&
-                                                <Image sizes="true"
-                                                    src={userData?.profile_pic || '/logo2.png'}
-                                                    alt="User"
-                                                    fill
-                                                    className="object-cover transition-transform group-hover:scale-110"
-                                                />
 
-                                            }
+                                            <Image sizes="true"
+                                                src={userData?.profile_pic || '/logo2.png'}
+                                                alt="User"
+                                                fill
+                                                className="object-cover transition-transform group-hover:scale-110"
+                                            />
+
+
                                         </div>
 
                                     </Link>

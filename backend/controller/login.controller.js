@@ -8,7 +8,7 @@ export const loginAuth = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ message: "Email and Password are required" });
+        return res.status(404).json({ message: "Email and Password are required" });
     }
 
     if (!secretKey) {
@@ -40,9 +40,9 @@ export const loginAuth = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             maxAge: 3600000,
         });
-   
-     
-        
+
+
+
         const { password: _, __v, ...userWithoutPassword } = userData;
 
         return res.status(200).json({
