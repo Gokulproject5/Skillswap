@@ -16,7 +16,7 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
   const scrollRef = useRef(null);
 
   const user = useSelector((state) => state.loginData.currentUser);
-  console.log(user);
+
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -126,7 +126,7 @@ const Page = () => {
   const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { callUser, setName, socket } = useContext(SocketContext);
 
-  // 
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -193,7 +193,7 @@ const Page = () => {
         try {
           const response = await fetch(`${api_base_url}/message/${user._id}/${activeUser._id}`, { credentials: 'include' });
           const messages = await response.json();
-         
+
           const formattedMessages = messages.map(msg => ({
             id: msg._id,
             text: msg.text,
@@ -215,7 +215,7 @@ const Page = () => {
     }
   }, [activeUser, user, api_base_url]);
 
- 
+
   const currentMessages = activeUser ? (chatHistories[activeUser.name] || []) : [];
 
   const handleSendMessage = () => {

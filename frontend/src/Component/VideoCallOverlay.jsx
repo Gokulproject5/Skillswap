@@ -34,15 +34,15 @@ const VideoCallOverlay = () => {
     }
   };
 
-  
+
   const showIncomingCall = call.isReceivingCall && !callAccepted;
-  
-  
+
+
   const showVideoCallUI = callAccepted && !callEnded;
 
   useEffect(() => {
     if (call.isReceivingCall || showVideoCallUI) {
-      if(!stream) {
+      if (!stream) {
         setupMedia();
       }
     }
@@ -50,7 +50,7 @@ const VideoCallOverlay = () => {
 
   return (
     <>
-      
+
       <AnimatePresence>
         {showIncomingCall && (
           <motion.div
@@ -83,14 +83,14 @@ const VideoCallOverlay = () => {
         )}
       </AnimatePresence>
 
-     
+
       <AnimatePresence>
         {showVideoCallUI && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed inset-0 z-[110] bg-gray-900/95 backdrop-blur-sm flex justify-center items-center p-4 lg:p-8"
+            className="fixed inset-0 z-110 bg-gray-900/95 backdrop-blur-sm flex justify-center items-center p-4 lg:p-8"
           >
             <div className="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-800">
               {/* Partner Video */}
@@ -101,7 +101,7 @@ const VideoCallOverlay = () => {
                 className="w-full h-full object-cover"
               />
 
-            
+
               <motion.div
                 drag
                 dragConstraints={{ top: 10, left: 10, right: 300, bottom: 300 }}

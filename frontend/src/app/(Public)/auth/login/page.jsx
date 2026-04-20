@@ -80,7 +80,7 @@ const LoginCard = () => {
                     {
                         alert && <Toast />
                     }
-                    {/* LEFT COLUMN*/}
+                    {/* LEFT */}
                     <div className='py-12 px-8 md:px-12 flex flex-col justify-center'>
                         <div className="mb-8">
                             <h2 className='text-3xl font-bold text-gray-800'>Welcome Back</h2>
@@ -140,14 +140,14 @@ const LoginCard = () => {
 
                             </button>
 
-                            {/* Social Divider */}
+
                             <div className="relative flex py-4 items-center">
                                 <div className="grow border-t border-gray-100"></div>
                                 <span className="shrink mx-4 text-gray-400 text-[10px] font-bold uppercase tracking-wider">Or continue with</span>
                                 <div className="grow border-t border-gray-100"></div>
                             </div>
 
-                            {/* Social Options */}
+                          
                             <div className="grid grid-cols-2 text-gray-600 gap-4">
                                 <button type="button" className="flex space-x-2 items-center justify-center py-2.5 border-2 border-gray-300 group rounded hover:text-white hover:bg-blue-500 transition-colors shadow-sm">
                                     <FaGoogle />
@@ -162,9 +162,9 @@ const LoginCard = () => {
                         </form>
                     </div>
 
-                    {/* RIGHT COLUMN */}
+                    {/* RIGHT  */}
                     <div className='hidden md:block relative w-full h-full overflow-hidden bg-blue-600'>
-                        {/* Background Illustration */}
+                        
                         <img
                             className='object-cover drag w-full h-full opacity-80'
                             src="/ilus.png"

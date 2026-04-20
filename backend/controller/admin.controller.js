@@ -1,6 +1,7 @@
 import job_post from "../models/jobPost.model.js"
 
 
+// get job post for approvals
 export const getJob = async (req, res) => {
     try {
         const jobs = await job_post.find({ verify: false }).lean();
@@ -46,6 +47,7 @@ export const updateJob = async (req, res) => {
     }
 }
 
+// delete jobs 
 export const deleteJob = async (req, res) => {
     const { id } = req.params;
    const _id = id
