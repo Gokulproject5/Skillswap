@@ -20,7 +20,7 @@ const Footer = () => {
                         <div className="flex items-center gap-2">
                             <img src="/logo2.png" className="w-8 h-8 object-contain" alt="logo" />
                             <span className="font-bold text-xl tracking-tighter text-gray-800">
-                                Skill Swap <span className="text-blue-600">Pro</span>
+                                Skill Swap 
                             </span>
                         </div>
                         <p className="text-gray-500 leading-relaxed">
@@ -61,7 +61,7 @@ const Footer = () => {
                     <div className="space-y-6">
                         <h4 className="font-bold text-gray-900">Support</h4>
                         <ul className="space-y-4 text-gray-500 flex flex-col">
-                            <li className="flex items-center gap-2"><Mail size={16} /> support@skillswappro.com</li>
+                            <li className="flex items-center gap-2"><Mail size={16} /> support@skillswap.com</li>
                             <li><Link href="" className="hover:text-blue-600 transition-colors">Help Center</Link></li>
                             <li><Link href="" className="hover:text-blue-600 transition-colors">Community Guidelines</Link></li>
                         </ul>
@@ -70,7 +70,7 @@ const Footer = () => {
 
                 {/* Bottom Bar */}
                 <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-sm">
-                    <p>© {new Date().getFullYear()} Skill Swap Pro Inc. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Skill Swap  Inc. All rights reserved.</p>
                     <div className="flex gap-8">
                         <Link href="" className="hover:text-gray-600 transition-colors">Terms of Service</Link>
                         <Link href="" className="hover:text-gray-600 transition-colors">Cookies</Link>

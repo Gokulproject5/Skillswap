@@ -2,13 +2,13 @@ import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
 
 export const metadata = {
-  title: "SkillSwap Pro",
+  title: "SkillSwap ",
   description:
     "Connect with professionals to exchange and enhance your high-value skills.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "SkillSwap Pro",
+    title: "SkillSwap ",
   },
 };
 

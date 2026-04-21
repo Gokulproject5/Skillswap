@@ -29,11 +29,12 @@ export const loginAuth = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: userData._id, email: userData.email },
+            { id: userData._id, role:userData.role },
             secretKey,
             { expiresIn: '1h' }
         );
 
+        
         res.cookie('auth_token', token, {
             httpOnly: true,
             sameSite: 'none',

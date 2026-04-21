@@ -13,7 +13,7 @@ const Header = () => {
                         <img src="/logo2.png" className='w-full h-full object-contain' alt="logo" />
                     </div>
                     <h1 className='font-bold text-2xl tracking-tighter text-gray-800'>
-                        Skill Swap <span className='text-blue-600'>Pro</span>
+                        Skill Swap 
                     </h1>
                 </Link>
 

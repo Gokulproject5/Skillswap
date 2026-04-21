@@ -41,7 +41,7 @@ const LoginCard = () => {
         setIsSubmitting(true);
         try {
             const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const res = await fetch(`${apiBaseUrl}/login/`, {
+            const res = await fetch(`${apiBaseUrl}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -147,7 +147,7 @@ const LoginCard = () => {
                                 <div className="grow border-t border-gray-100"></div>
                             </div>
 
-                          
+
                             <div className="grid grid-cols-2 text-gray-600 gap-4">
                                 <button type="button" className="flex space-x-2 items-center justify-center py-2.5 border-2 border-gray-300 group rounded hover:text-white hover:bg-blue-500 transition-colors shadow-sm">
                                     <FaGoogle />
@@ -164,7 +164,7 @@ const LoginCard = () => {
 
                     {/* RIGHT  */}
                     <div className='hidden md:block relative w-full h-full overflow-hidden bg-blue-600'>
-                        
+
                         <img
                             className='object-cover drag w-full h-full opacity-80'
                             src="/ilus.png"

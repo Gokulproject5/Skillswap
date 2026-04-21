@@ -23,6 +23,8 @@ const userSchema = new Schema({
         required: [true, "Password is Required"],
 
     },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+
     profile_pic: {
         type: String
     },

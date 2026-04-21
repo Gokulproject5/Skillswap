@@ -9,9 +9,9 @@ const Footer = () => {
         
         {/* Brand Section */}
         <div className='space-y-1 w-full md:w-auto text-left'>
-           <h1 className='text-xl font-bold text-gray-800 '>Skill Swap <span className='text-blue-600'>Pro</span></h1>
+           <h1 className='text-xl font-bold text-gray-800 '>Skill Swap </h1>
            <p className='text-[10px] md:text-xs text-gray-400 font-medium tracking-tight'>
-             © 2026 SkillSwap Pro. Editorial Precision in Skill Exchange.
+             © 2026 SkillSwap . Editorial Precision in Skill Exchange.
            </p>
         </div>
          

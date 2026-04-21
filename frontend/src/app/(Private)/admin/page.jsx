@@ -71,10 +71,8 @@ const AdminPage = () => {
   }, []);
 
 
-
-
   return (
-    <section className='min-h-screen my-19 px-10 bg-white' id='admin_panel'>
+    <section className='min-h-screen my-19 px-10 text-gray-700 bg-white' id='admin_panel'>
       <div className='grid mx-auto px-4 md:px-20 py-10'>
         <div className='flex'>
           <h1 className='text-4xl'>
@@ -88,7 +86,7 @@ const AdminPage = () => {
             <div className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
               <div>
                 <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">User Stats</h2>
-                <p className="text-3xl font-bold mt-1 text-gray-900">1,101</p>
+                <p className="text-3xl font-bold mt-1 text-gray-900">5</p>
               </div>
               <p className="text-xs text-blue-600 font-medium mt-2">↑ 12% from last month</p>
             </div>
@@ -97,18 +95,18 @@ const AdminPage = () => {
             <div className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
               <div>
                 <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Jobs Posted</h2>
-                <p className="text-3xl font-bold mt-1 text-gray-900">452</p>
+                <p className="text-3xl font-bold mt-1 text-gray-900">4</p>
               </div>
-              <p className="text-xs text-green-600 font-medium mt-2">85 currently active</p>
+              <p className="text-xs text-green-600 font-medium mt-2">3 currently active</p>
             </div>
 
             {/* Reports */}
             <div className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
               <div>
                 <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Report Stats</h2>
-                <p className="text-3xl font-bold mt-1 text-gray-900">24</p>
+                <p className="text-3xl font-bold mt-1 text-gray-900">4</p>
               </div>
-              <p className="text-xs text-red-500 font-medium mt-2">5 pending review</p>
+              <p className="text-xs text-red-500 font-medium mt-2">1 pending review</p>
             </div>
 
           </div>
@@ -121,8 +119,8 @@ const AdminPage = () => {
             <h3 className='text-2xl font-medium'>Jobs Approval</h3>
             <ul className='space-y-3  py-3 overflow-y-auto  bg-gray-50 rounded-xl border border-gray-100'>
               {
-                jobs.length > 0 ? (
-                  jobs.map(({ role, company, work_type, skills, _id, apply_link }, index) => (
+                jobs?.length > 0 ? (
+                  jobs?.map(({ role, company, work_type, skills, _id, apply_link }, index) => (
                     <li key={index} className='bg-white border border-gray-200 shadow-sm flex md:flex-row space-y-3 flex-col items-center justify-between py-2 px-2 md:px-6 md:py-4 rounded-2xl max-w-6xl mx-auto hover:border-blue-200 transition-colors'>
 
                       {/* Left side*/}

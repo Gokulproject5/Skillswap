@@ -41,20 +41,21 @@ const Header = () => {
 
     return (
         <>
-            <header className="px-4 md:px-10 py-2 fixed w-full shadow bg-white shadow-gray-100 z-60">
+            <header className="px-4 md:px-10 py-3 fixed w-full shadow bg-white shadow-gray-100 z-60">
                 <div className="flex items-center justify-between">
                     {/* Logo Area */}
                     <div onClick={() => navigate.push("/dashboard")} className="flex items-center -space-x-2.5 cursor-pointer shrink-0">
-                        <Image
+                        <div className="relative overflow-hidden w-20 h-15 ">
+                            <Image
                             src="/logo2.png"
                             alt="App Icon"
-                            width={80}
-                            height={40}
-                            className="drag object-cover w-12 md:w-15"
+                            fill
+                            className="drag object-cover "
                             loading="eager"
                         />
+                        </div>
                         <h1 className="text-gray-600 font-bold text-lg md:text-2xl tracking-tighter">
-                            Skill Swap <span className="text-blue-600">Pro</span>
+                            Skill Swap 
                         </h1>
                     </div>
 

@@ -41,6 +41,13 @@ export const initSocket = (server) => {
             }
         });
 
+        socket.on("endCall", (data) => {
+            const peerSocketId = userSocketMap.get(data.to);
+            if (peerSocketId) {
+                io.to(peerSocketId).emit("callEnded");
+            }
+        });
+
         socket.on("sendMessage", async (data) => {
             try {
                 const time = data.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

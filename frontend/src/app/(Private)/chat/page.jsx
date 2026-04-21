@@ -30,11 +30,11 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
 
   const { callUser, setName } = useContext(SocketContext);
 
-  useEffect(() => {
-    if (user?.name) {
+ useEffect(() => {
+    if (user?.name && setName) { 
       setName(user.name);
     }
-  }, [user]);
+  }, [user, setName]);
 
   const handleVideoIconClick = (activeUser) => {
     const targetUserId = activeUser?._id || activeUser?.id || activeUser?.name;
@@ -260,16 +260,16 @@ const Page = () => {
             {loading ? (
               <div className="p-4 text-center text-sm text-gray-500">Loading chats...</div>
             ) : chatUsers.length === 0 ? (
-              <div className="p-4 text-center text-sm text-gray-400">No active connections found.</div>
+              <div className="p-4 text-center text-sm  text-gray-400">No active connections found.</div>
             ) : chatUsers.map((chatUser, index) => {
               const messages = chatHistories[chatUser.name] || [];
-              const lastMsg = messages.length > 0 ? messages[messages.length - 1] : { text: "Say Hi!", time: "" };
+              const lastMsg = messages.length > 0 ? messages[messages.length - 1] : { text: "", time: "" };
 
               return (
                 <div
                   key={chatUser._id || index}
                   onClick={() => { setActiveIndex(index); setShowChat(true); }}
-                  className={`flex items-center p-3 cursor-pointer rounded-xl transition-all
+                  className={`flex items-center p-3  cursor-pointer rounded-xl transition-all
                     ${activeIndex === index ? "bg-blue-50" : "hover:bg-gray-50"}`}
                 >
                   <div className='relative shrink-0 w-12 h-12'>
