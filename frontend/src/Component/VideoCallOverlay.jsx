@@ -26,7 +26,7 @@ const VideoCallOverlay = () => {
 
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCamOn, setIsCamOn] = useState(true);
-const videoRef = useRef(null)
+  const videoRef = useRef(null)
 
   useEffect(() => {
     if (stream) {
@@ -134,8 +134,8 @@ const videoRef = useRef(null)
               />
 
 
-              <div className="absolute inset-0 -z-10 flex items-center justify-center bg-gray-900 pointer-events-none">
-                {isCalling && !callAccepted ? (
+              <div className={`absolute inset-0 ${!isCalling || callAccepted ? "-z-10" : "z-10"} flex items-center justify-center bg-gray-900 pointer-events-none`}>
+                {isCalling || !callAccepted ? (
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-20 h-20 border-4  border-white border-t-transparent rounded-full animate-spin"></div>
                     <p className="text-xl text-blue-400  font-semibold animate-pulse">Calling...</p>
@@ -166,7 +166,7 @@ const videoRef = useRef(null)
                 )}
               </motion.div>
 
-            
+
               <div className="fixed md:absolute my-2 max-w-85 w-full md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-4 bg-black/40 flex-1 backdrop-blur-xl rounded-3xl border border-white/10 z-40">
                 <button
                   onClick={toggleMic}
