@@ -10,8 +10,7 @@ const router = express.Router();
 // get existing data
 router.get("/", auth,getUser );
 
-// Post for create a new  data
-router.post("/",createUser);
+
 
 // put for update the existing data using id 
 router.put("/:id",auth, updateUser );

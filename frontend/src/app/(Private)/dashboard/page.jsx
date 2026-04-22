@@ -3,11 +3,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { useAuth } from "@/Context/authContext";
 
 export default function Dashboard() {
-  const userData = useSelector((state) =>
-    state.loginData.currentUser
-  )
+  const { user } = useAuth()
   const requests = useSelector((state) =>
     state.request.RequestData
   )
@@ -32,12 +31,12 @@ export default function Dashboard() {
 
   return (
     <main
-      className={`transition-all bg-gray-100 animate-page-entry duration-300 min-h-screen pt-24 pb-10 px-4 md:px-8 lg:px-29`}
+      className={`transition-all my-10 bg-gray-100 animate-page-entry duration-300 min-h-screen pt-24 pb-10 px-4 md:px-8 lg:px-29`}
     >
       <header className="mb-8 md:mb-10 text-center md:text-left">
         <title>Dashboard</title>
         <h1 className="text-2xl md:text-4xl font-bold text-gray-900">
-          Welcome Back, <span className="text-blue-600">{userData?.name}</span>
+          Welcome Back, <span className="text-blue-600">{user?.name}</span>
         </h1>
         <p className="text-gray-500 text-xs md:text-sm mt-1">
           Monitor your skills and network progress here.

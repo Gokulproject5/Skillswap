@@ -6,13 +6,13 @@ import {
   CheckCircle2,
   Verified,
 } from "lucide-react"
-import { useSelector } from 'react-redux';
 import ProfileUpdate from '@/Component/(Private)/DialogForm';
+import { useAuth } from '@/Context/authContext';
 
 
 
 const Profile = () => {
-  const user = useSelector((state) => state.loginData.currentUser)
+  const { user } = useAuth();
   const [offering, setOffering] = useState(user?.skills);
   const [learning, setLearning] = useState(user?.seeking);
   const [isOpen, setIsOpen] = useState(false);
@@ -82,9 +82,9 @@ const Profile = () => {
 
           <div className="bg-white rounded-2xl border border-[#e0e0e0] overflow-hidden shadow-sm">
             <div className="relative h-48 bg-radial-[at_top] group from-blue-600 to-black">
-            
+
               <button onClick={handleModal} className="absolute flex items-center justify-center hover:shadow-xl hover:shadow-black/50 hover:scale-105  hover:border-2 border-blue-700 top-4 right-4 p-2  rounded-full text-white shadow-md  transition-all">
-                
+
                 <Edit3 size={18} />
               </button>
             </div>

@@ -1,5 +1,6 @@
 "use client"
 import Toast from '@/Component/Home/Toast';
+import { AuthContext, useAuth } from '@/Context/authContext';
 import { setuser } from '@/feature/loginSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,28 +15,8 @@ const LoginCard = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [alert, setAlert] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const userData = useSelector((state) => state.loginData.currentUser);
-    const dispatch = useDispatch();
-    const route = useRouter();
-
+    const { login } = useAuth();
     const { register, handleSubmit, formState: { errors } } = useForm();
-
-
-    useEffect(() => {
-        const storeUserData = sessionStorage.getItem("Login");
-        if (storeUserData) {
-            try {
-                const parsedUser = JSON.parse(storeUserData);
-                if (!userData) {
-                    dispatch(setuser(parsedUser));
-                }
-                route.replace("/dashboard");
-            } catch {
-                sessionStorage.removeItem("Login");
-            }
-        }
-    }, [dispatch, route, userData]);
 
     const onSubmit = async (data) => {
         setIsSubmitting(true);
@@ -53,16 +34,16 @@ const LoginCard = () => {
             const result = await res.json();
 
 
+
             if (!res.ok) {
                 setAlert(true);
                 setTimeout(() => setAlert(false), 3000);
                 return;
             }
+            if (res.ok) {
+                await login();
+            }
 
-            const user = result.userData
-            dispatch(setuser(user));
-            sessionStorage.setItem("Login", JSON.stringify(user));
-            route.replace('/dashboard');
 
         } catch (error) {
             console.error("Login Error:", error);

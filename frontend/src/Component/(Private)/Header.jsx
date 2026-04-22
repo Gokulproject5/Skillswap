@@ -11,29 +11,26 @@ import Input from './Input';
 import { LogOut } from "lucide-react";
 import { clearUser } from "@/feature/loginSlice";
 import { HiMiniUsers } from "react-icons/hi2";
+import { useAuth } from "@/Context/authContext";
 
 
 const Header = () => {
     const navigate = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const userData = useSelector((state) => state.loginData.currentUser)
+    const { user, logout } = useAuth();
     const pathname = usePathname();
     const isactive = pathname
-    // props for input component
+
     const input = {
         type: "text",
         placeholder: "Search...",
     };
 
-    //  dispatch func in redux
     const dispatch = useDispatch();
-
+    
     //  handle logout 
     const handleLogout = () => {
-        dispatch(clearUser());
-        sessionStorage.removeItem("Login")
-        sessionStorage.removeItem("token")
-        navigate.replace("/auth/login");
+        logout()
 
     }
 
@@ -47,15 +44,15 @@ const Header = () => {
                     <div onClick={() => navigate.push("/dashboard")} className="flex items-center -space-x-2.5 cursor-pointer shrink-0">
                         <div className="relative overflow-hidden w-20 h-15 ">
                             <Image
-                            src="/logo2.png"
-                            alt="App Icon"
-                            fill
-                            className="drag object-cover "
-                            loading="eager"
-                        />
+                                src="/logo2.png"
+                                alt="App Icon"
+                                fill
+                                className="drag object-cover "
+                                loading="eager"
+                            />
                         </div>
                         <h1 className="text-gray-600 font-bold text-lg md:text-2xl tracking-tighter">
-                            Skill Swap 
+                            Skill Swap
                         </h1>
                     </div>
 
@@ -87,11 +84,11 @@ const Header = () => {
 
                                 <li className="flex items-center pl-2">
                                     <Link href="/profile" className={`group rounded-full focus:outline-none focus:ring-2 relative flex items-center justify-center focus:ring-blue-600 ${isactive === "/profile" && "ring-2 ring-blue-600"}`}>
-                                        <Tooltip title={userData?.name} style={"translate-y-9 "} />
+                                        <Tooltip title={user?.name} style={"translate-y-9 "} />
                                         <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
 
                                             <Image sizes="true"
-                                                src={userData?.profile_pic || '/logo2.png'}
+                                                src={user?.profile_pic || '/logo2.png'}
                                                 alt="User"
                                                 fill
                                                 className="object-cover transition-transform group-hover:scale-110"
@@ -116,7 +113,7 @@ const Header = () => {
                     <div className="md:hidden flex items-center space-x-4">
                         <Link href="/profile">
                             <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
-                                <Image sizes="true" src={userData?.profile_pic || "/logo.png"} alt="User" fill className="object-cover" />
+                                <Image sizes="true" src={user?.profile_pic || "/logo.png"} alt="User" fill className="object-cover" />
                             </div>
                         </Link>
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-3xl text-gray-600">

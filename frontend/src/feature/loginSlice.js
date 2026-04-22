@@ -1,7 +1,8 @@
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    currentUser: null
+    currentUser: ""
 }
 
 
@@ -19,5 +20,14 @@ export const loginData = createSlice({
     }
 }
 )
+
+
+
+
+
+
+
+
+
 export const { setuser, clearUser } = loginData.actions
 export default loginData.reducer

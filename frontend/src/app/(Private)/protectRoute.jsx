@@ -1,23 +1,25 @@
 "use client"
+import { useAuth } from "@/Context/authContext"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 const ProtectRoute = ({ children }) => {
     const navigate = useRouter()
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const { user, isAuthenticated, loading } = useAuth();
 
     useEffect(() => {
-        const loginAuth = sessionStorage.getItem("Login")
 
-        if (!loginAuth) {
-            navigate.replace("/auth/login")
-        } else {
-            setIsAuthenticated(true)
+        if (loading) return
+
+        if (!isAuthenticated) {
+            navigate.replace("/auth/login");
+
         }
-    }, [navigate])
+
+    }, [navigate, loading, isAuthenticated])
 
 
-    if (!isAuthenticated) {
+    if (loading || !isAuthenticated) {
         return (
             <div className="flex space-x-2 min-h-screen justify-center text-center items-center">
                 <div className="w-5 h-5  border-blue-500 border-2  border-t-0 animate-spin rounded-full"></div> <p>Loading...</p>

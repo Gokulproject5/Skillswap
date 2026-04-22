@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/Context/authContext";
 import { UserPlus2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,14 +8,14 @@ import { useSelector } from "react-redux";
 
 
 const Connection = () => {
-    const userData = useSelector((state) => state?.loginData?.currentUser?.connection);
+    const { user } = useAuth()
     const usersData = useSelector((state) => state.userDatas?.value) || [];
 
     const filterData = useMemo(() => {
 
-        return usersData.filter((user) => userData.includes(user._id));
+        return usersData.filter((users) => user.connection.includes(users._id));
 
-    }, [userData, usersData]);
+    }, [user, usersData]);
 
 
     return (

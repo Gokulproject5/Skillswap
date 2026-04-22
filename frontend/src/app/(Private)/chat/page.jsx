@@ -8,21 +8,21 @@ import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
 import { SocketContext } from '@/Context/SocketContext';
 import { setUsers } from '@/feature/userSlice';
-import { BanIcon, Blocks } from 'lucide-react';
+import { BanIcon } from 'lucide-react';
+import { useAuth } from '@/Context/authContext';
 
 
 // ChatBox
 const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage, onBack }) => {
   const scrollRef = useRef(null);
-  const user = useSelector((state) => state.loginData.currentUser);
   const { callUser, setName } = useContext(SocketContext);
-
+  const { user } = useAuth();
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
-        behavior: 'smooth'
+        // behavior: 'smooth'
       });
     }
   }, [messages]);
@@ -160,16 +160,17 @@ const Page = () => {
   const [showChat, setShowChat] = useState(false);
   const [loading, setLoading] = useState(true);
   const [chatHistories, setChatHistories] = useState({});
-
-  const user = useSelector((state) => state.loginData.currentUser);
   const dbUsers = useSelector((state) => state.userDatas.value) || [];
   const [chatUsers, setChatUsers] = useState([]);
   const dispatch = useDispatch();
   const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { callUser, setName, socket } = useContext(SocketContext);
+  const { user } = useAuth();
 
   // Fetch users
   useEffect(() => {
+    if (!user) return;
+
     const fetchUsers = async () => {
       try {
         setLoading(true);
@@ -178,7 +179,7 @@ const Page = () => {
           credentials: "include"
         });
         const result = await response.json();
-        const data = result.filter((d) => d._id !== user._id);
+        const data = result.filter((d) => d._id !== user?.id);
         dispatch(setUsers(data));
       } catch (err) {
         console.error("Failed to fetch users:", err);
@@ -192,7 +193,7 @@ const Page = () => {
     } else {
       setLoading(false);
     }
-  }, [dispatch, api_base_url, user?._id]);
+  }, [dispatch, api_base_url, user]);
 
   // Filter connection data
   useEffect(() => {
@@ -298,16 +299,11 @@ const Page = () => {
 
     <main className="h-screen my-22 lg:my-10 overflow-hidden lg:mx-15 bg-gray-100 flex items-center justify-center p-0 lg:p-10">
       <title>Chat | {activeUser?.name}</title>
-
-
       <div className="w-full max-w-7xl h-full lg:h-[85vh] grid grid-cols-12 bg-white lg:rounded-2xl lg:shadow-2xl overflow-hidden">
-
-
         <section className={`
           ${showChat ? 'hidden lg:flex lg:col-span-3' : 'flex col-span-12 lg:col-span-4 xl:col-span-3'}
           flex-col h-full border-r border-gray-100 bg-white
         `}>
-
           <div className='shrink-0 p-6 pb-2'>
             <h1 className='text-2xl font-bold text-gray-800'>Chats</h1>
             <div className="mt-4 relative">

@@ -3,12 +3,13 @@ import Header from '@/Component/Home/Header';
 
 
 
+
 export default function PublicLayout({ children }) {
   return (
     <>
-     <Header />
-     { children }
-     <Footer />
+        <Header />
+        {children}
+        <Footer />
     </>
   );
 }

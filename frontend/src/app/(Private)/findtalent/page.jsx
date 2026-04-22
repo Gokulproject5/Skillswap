@@ -5,13 +5,13 @@ import UserCard from '@/Component/(Private)/UserComponent';
 import { useDebounce } from 'use-debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUsers } from '@/feature/userSlice';
-import { CardSkeleton, Skeleton } from '@/Component/(Private)/LoadingCom';
+import { CardSkeleton} from '@/Component/(Private)/LoadingCom';
+import { useAuth } from '@/Context/authContext';
 
 const Page = () => {
   const [isActive, setActive] = useState("All");
   const [text, setText] = useState("");
-  const currentuser = useSelector((state) => state.loginData.currentUser);
-
+  const { user } = useAuth();
   // Access redux
   const userData = useSelector((state) => state.userDatas.value) || [];
   const dispatch = useDispatch();
@@ -25,11 +25,8 @@ const Page = () => {
         setLoading(true)
         const response = await fetch(`${api_base_url}/user`, { method: "GET", credentials: "include" });
         const result = await response.json();
-
-        const data = await result.filter((data) => data._id !== currentuser._id)
+        const data = await result.filter((data) => data._id !== user._id)
         dispatch(setUsers(data));
-
-
         setLoading(false)
       } catch (err) {
         console.error("Failed to fetch users:", err);
@@ -65,7 +62,7 @@ const Page = () => {
   return (
     <>
       <title>Find User</title>
-      <div className="bg-gray-100 min-h-screen pt-24 pb-10 px-4 md:px-12 lg:px-20 xl:px-40 animate-page-entry transition-all duration-300">
+      <div className="bg-gray-100 min-h-screen pt-24 my-10 pb-10 px-4 md:px-12 lg:px-20 xl:px-40 animate-page-entry transition-all duration-300">
         <section id='finduser'>
           <div className='space-y-2 text-center md:text-left'>
             <div className='text-2xl md:text-3xl font-extrabold'>
@@ -88,7 +85,7 @@ const Page = () => {
               />
             </div>
 
-            <div className='flex gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-hide'>
+            <div className='flex gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 hide-scroll'>
               {searchBtn.map((btn) => (
                 <button
                   key={btn}

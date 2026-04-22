@@ -3,14 +3,14 @@
 import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
-import { useSelector } from 'react-redux';
+import { useAuth } from './authContext';
 
 const SocketContext = createContext();
 
 const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL);
 
 const ContextProvider = ({ children }) => {
-  const currentUser = useSelector((state) => state.loginData?.currentUser);
+  const { user: currentUser } = useAuth();
 
   const [stream, setStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);

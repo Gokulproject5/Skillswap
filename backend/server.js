@@ -2,7 +2,7 @@ import "./utils/loadEnv.js";
 import express, { json } from "express";
 import cors from "cors";
 import userRoute from "./routes/user.route.js";
-import Auth from "./routes/login.route.js"
+import Auth from "./routes/auth.route.js"
 import { auth } from "./middleware/auth.js";
 import { jobRoute } from "./routes/jobPost.route.js";
 import request from './routes/request.route.js';
@@ -32,7 +32,7 @@ app.use(cors({
 
 // using routes
 app.use('/user', userRoute)
-app.use('/login', Auth)
+app.use('/', Auth)
 app.use('/job_post', jobRoute);
 app.use('/admin', adminRouter);
 app.use('/api/request', request);

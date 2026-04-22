@@ -29,7 +29,7 @@ const Navbar = () => {
                                 className={`
                                     relative flex items-center justify-center h-10 w-10 md:h-12 md:w-12 rounded-full transition-all duration-300 active:scale-95
                                     ${isActive
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40'
+                                        ? 'bg-blue-600 text-white shadow shadow-blue-600/50'
                                         : 'text-gray-400 hover:bg-gray-100 hover:text-blue-600'
                                     }
                                 `}
@@ -42,10 +42,6 @@ const Navbar = () => {
                                     {isActive ? menu.active : menu.icon}
                                 </svg>
 
-
-                                {isActive && (
-                                    <span className="absolute -bottom-1 md:hidden h-1 w-1 bg-blue-600 rounded-full"></span>
-                                )}
                             </Link>
                         </li>
                     );

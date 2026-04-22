@@ -1,5 +1,6 @@
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
+import { AuthProvider } from "@/Context/authProvider";
 
 export const metadata = {
   title: "SkillSwap ",
@@ -25,9 +26,9 @@ export default function RootLayout({ children }) {
         className={` min-h-full bg-gray-100 inter flex flex-col overflow-x-clip`}
       >
         <ReduxProvider>
-
-          {children}
-
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ReduxProvider>
       </body>
     </html>

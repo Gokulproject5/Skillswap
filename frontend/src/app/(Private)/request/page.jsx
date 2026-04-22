@@ -1,9 +1,11 @@
 "use client"
+import { useAuth } from '@/Context/authContext';
 import { setRequest } from '@/feature/requestSlice';
+import { div } from 'framer-motion/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
-import { MdCallMade, MdCallReceived } from "react-icons/md";
+import { MdCallMade, MdCallReceived, MdCancel } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 
 // datas
@@ -56,7 +58,7 @@ const RequestCard = ({ name, proposal, skill, btnText, request, btntext, img, ac
 );
 
 const Page = () => {
-  const userId = useSelector((state) => state?.loginData?.currentUser?._id);
+  const { user } = useAuth();
   const stated = useSelector((state) => state?.request?.RequestData);
 
   const dispatch = useDispatch();
@@ -121,7 +123,7 @@ const Page = () => {
   useEffect(() => {
     const fetchRequest = async () => {
       try {
-        const request = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/my-request/${userId}`, {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/my-request/${user._id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -212,27 +214,42 @@ const Page = () => {
             <MdCallMade className='text-blue-600' />
             <h1>Sending Proposal</h1>
           </div>
+        
 
           <div className='shrink-0'>
             <div className='bg-blue-100 text-blue-700 text-[10px] md:text-sm font-bold px-2 md:px-3 py-1 rounded-full'>
-              {/* {incomingRequests.length} Pending */}
+              {stated.length} Pending
             </div>
           </div>
         </div>
 
         {/* List of Requests */}
         <div className='space-y-4 mt-6'>
-          {/* {incomingRequests.map((req) => (
-            <RequestCard
-              key={req.id}
-              name={req.name}
-              proposal={req.proposal}
-              skill={req.skill}
-              btnText={"pending"}
-              btntext={<MdCancel className="text-lg" />}
-              img={req.img}
-            />
-          ))} */}
+          {
+            stated.length > 0 ? (
+              stated.map((req, index) => {
+                const { name, skills, _id, profile_pic, seeking, slug } = req.sender;
+                return (
+                  <RequestCard
+                    key={_id}
+                    name={name}
+                    proposal={seeking}
+                    skill={skills}
+                    btnText={"Reject"}
+                    reject={handleReject}
+                    btntext={"Accept"}
+                    accept={handleAccept}
+                    request={req._id}
+                    slug={slug}
+                    img={profile_pic}
+                  />
+                )
+              })) : (
+              <div className='bg-gray-200 flex items-center justify-center rounded-md min-h-20 h-full'>
+                <h1>No sending  proposal </h1>
+              </div>
+            )
+          }
         </div>
       </div>
     </div>

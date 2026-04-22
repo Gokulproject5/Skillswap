@@ -175,7 +175,7 @@ const Page = () => {
           <div className="w-full lg:max-w-md">
             <Input value={inputConfig} />
           </div>
-          <div className="flex gap-2  w-full overflow-x-auto lg:w-auto pb-2 lg:pb-0 no-scrollbar">
+          <div className="flex gap-2  w-full overflow-x-auto lg:w-auto pb-2 lg:pb-0 hide-scroll">
             {Type.map((loc, index) => (
               <button
                 key={index}

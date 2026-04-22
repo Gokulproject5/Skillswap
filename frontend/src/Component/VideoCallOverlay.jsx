@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { SocketContext } from '@/Context/SocketContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoCall, IoClose } from 'react-icons/io5';
@@ -26,7 +26,7 @@ const VideoCallOverlay = () => {
 
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCamOn, setIsCamOn] = useState(true);
-
+const videoRef = useRef(null)
 
   useEffect(() => {
     if (stream) {
@@ -78,6 +78,7 @@ const VideoCallOverlay = () => {
     }
   }, [stream, showVideoCallUI]);
 
+
   return (
     <>
       {/* incominig call */}
@@ -87,7 +88,7 @@ const VideoCallOverlay = () => {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
-            className="fixed top-10 left-1/2 -translate-x-1/2 z-[100] bg-white p-4 rounded-xl shadow-2xl flex items-center gap-6 min-w-[300px] border border-gray-100"
+            className="fixed top-10 left-1/2 -translate-x-1/2 z-100 bg-white p-4 rounded-xl shadow-2xl flex items-center gap-6 min-w-75 border border-gray-100"
           >
             <div className="flex-1">
               <h3 className="font-bold text-gray-800 text-lg">{call.name || 'Incoming Call...'}</h3>
@@ -120,7 +121,7 @@ const VideoCallOverlay = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] bg-gray-950 flex justify-center items-center p-4"
+            className="fixed inset-0 z-110 bg-gray-950 flex justify-center items-center p-4"
           >
             <div className="relative w-full max-w-6xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-800">
 
@@ -136,11 +137,11 @@ const VideoCallOverlay = () => {
               <div className="absolute inset-0 -z-10 flex items-center justify-center bg-gray-900 pointer-events-none">
                 {isCalling && !callAccepted ? (
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-xl text-blue-400 font-semibold animate-pulse">Calling...</p>
+                    <div className="w-20 h-20 border-4  border-white border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-xl text-blue-400  font-semibold animate-pulse">Calling...</p>
                   </div>
                 ) : (
-                  <p className="text-gray-500">Connecting video...</p>
+                  <p className="text-gray-100 -z-20">Connecting video...</p>
                 )}
               </div>
 
@@ -148,7 +149,7 @@ const VideoCallOverlay = () => {
               <motion.div
                 drag
                 dragConstraints={{ left: -400, right: 0, top: 0, bottom: 300 }}
-                className="absolute top-6 right-6 w-32 md:w-48 aspect-video bg-gray-800 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 cursor-move z-30"
+                className="absolute  top-6 right-6 w-32 md:w-48 aspect-video bg-gray-800 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 cursor-move z-30"
               >
                 {isCamOn ? (
                   <video
@@ -165,8 +166,8 @@ const VideoCallOverlay = () => {
                 )}
               </motion.div>
 
-
-              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-4 bg-black/40 backdrop-blur-xl rounded-3xl border border-white/10 z-40">
+            
+              <div className="fixed md:absolute my-2 max-w-85 w-full md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 px-6 py-4 bg-black/40 flex-1 backdrop-blur-xl rounded-3xl border border-white/10 z-40">
                 <button
                   onClick={toggleMic}
                   className={`w-12 h-12 rounded-2xl flex justify-center items-center text-white transition-all ${isMicOn ? 'bg-white/10 hover:bg-white/20' : 'bg-red-500 hover:bg-red-600'}`}
