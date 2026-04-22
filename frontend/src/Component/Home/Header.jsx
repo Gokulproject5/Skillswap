@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -8,9 +9,9 @@ const Header = () => {
     
   return (
      <header className='flex justify-between bg-white  items-center border-b border-gray-100 px-6 py-7 md:px-20 shadow-xl shadow-gray-100 '>
-                <Link href={"/"} className='flex items-center gap-2'>
-                    <div className='w-12 h-12'>
-                        <img src="/logo2.png" className='w-full h-full object-contain' alt="logo" />
+                <Link href={"/"} className='flex items-center  '>
+                    <div className='w-15 relative h-15'>
+                        <Image fill sizes='true' alt="logo" src="/logo2.png" className='w-full h-full object-cover drag'  />
                     </div>
                     <h1 className='font-bold text-2xl tracking-tighter text-gray-800'>
                         Skill Swap 

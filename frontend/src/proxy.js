@@ -16,7 +16,7 @@ const getPayload = async (request) => {
 };
 
 
-export async function middleware(request) {
+export async function proxy(request) {
    const pathname = request.nextUrl.pathname;
    const loginUrl = new URL("/auth/login", request.url);
    const forbiddenUrl = new URL("/not-authorized", request.url);

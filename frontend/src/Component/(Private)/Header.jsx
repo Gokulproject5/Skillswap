@@ -47,6 +47,7 @@ const Header = () => {
                                 src="/logo2.png"
                                 alt="App Icon"
                                 fill
+                                sizes="true"
                                 className="drag object-cover "
                                 loading="eager"
                             />
