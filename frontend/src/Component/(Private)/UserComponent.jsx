@@ -66,7 +66,7 @@ const UserCard = ({ user, Loading }) => {
         <Link href={`/findtalent/${user.slug}`}
 
           className={`w-full active:scale-95 duration-200 flex items-center gap-2 justify-center rounded py-2.5 text-xs md:text-sm font-bold transition-all shadow-sm 
-            bg-blue-400 text-gray-50 border border-gray-200 cursor-default leading-1 group hover:bg-blue-500  `}
+            bg-blue-400 text-gray-50 border border-gray-200  cursor-pointer leading-1 group hover:bg-blue-500  `}
         >
           View profile  <FiArrowRight className='text-lg group-hover:translate-x-1 transition-all ease-in-out' />
 

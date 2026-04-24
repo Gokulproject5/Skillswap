@@ -1,8 +1,9 @@
 "use client"
-import Toast from '@/Component/Home/Toast';
+import toast from 'react-hot-toast';
 import { AuthContext, useAuth } from '@/Context/authContext';
 import { setuser } from '@/feature/loginSlice';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const LoginCard = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [alert, setAlert] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useAuth();
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -36,19 +36,19 @@ const LoginCard = () => {
 
 
             if (!res.ok) {
-                setAlert(true);
-                setTimeout(() => setAlert(false), 3000);
+                toast.error(result.message || "Invalid credentials");
+                setIsSubmitting(false);
                 return;
             }
             if (res.ok) {
+                toast.success("Login successful!");
                 await login();
             }
 
 
         } catch (error) {
             console.error("Login Error:", error);
-            setAlert(true);
-        } finally {
+            toast.error("Something went wrong");
             setIsSubmitting(false);
         }
     };
@@ -58,9 +58,6 @@ const LoginCard = () => {
             <div className='flex justify-center my-5  bg-gray-100 p-4'>
 
                 <div className='max-w-4xl w-full bg-white grid grid-cols-1 md:grid-cols-2 rounded-xl shadow-2xl overflow-hidden'>
-                    {
-                        alert && <Toast />
-                    }
                     {/* LEFT */}
                     <div className='py-12 px-8 md:px-12 flex flex-col justify-center'>
                         <div className="mb-8">
@@ -146,8 +143,11 @@ const LoginCard = () => {
                     {/* RIGHT  */}
                     <div className='hidden md:block relative w-full h-full overflow-hidden bg-blue-600'>
 
-                        <img
-                            className='object-cover drag w-full h-full opacity-80'
+                        <Image
+                            fill
+                            priority
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className='object-cover drag opacity-80'
                             src="/ilus.png"
                             alt="Welcome Illustration"
                         />
@@ -160,8 +160,8 @@ const LoginCard = () => {
                             </div>
 
                             <div className='flex flex-col items-center'>
-                                <div className='w-20 h-20  bg-white rounded-full mb-6'>
-                                    <img src="/logo2.png" className='w-full h-full object-cover' alt="" />
+                                <div className='w-20 h-20 bg-white rounded-full mb-6 relative overflow-hidden'>
+                                    <Image src="/logo2.png" fill sizes="80px" className='object-cover' alt="Logo" />
                                 </div>
                                 <p className='text-white/90 text-md italic max-w-xs leading-relaxed'>
                                     "This platform has completely transformed how our team handles daily operations."

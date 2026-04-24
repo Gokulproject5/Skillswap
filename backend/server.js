@@ -12,6 +12,7 @@ import './db/connection.db.js'
 import adminRouter from "./routes/admin.route.js";
 import cookieParser from "cookie-parser";
 import { initSocket } from "./service/Socket.js";
+import exchangeRoute from "./routes/exchange.route.js";
 
 
 // intialize the app using express
@@ -37,6 +38,7 @@ app.use('/job_post', jobRoute);
 app.use('/admin', adminRouter);
 app.use('/api/request', request);
 app.use('/message', messageRoute);
+app.use('/api/exchange', exchangeRoute);
 
 
 

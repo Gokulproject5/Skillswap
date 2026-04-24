@@ -59,6 +59,9 @@ export const loginAuth = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
     const loginUser = req.user;
 
+    if (!loginUser) {
+        return res.status(200).json({ user: null });
+    }
 
     try {
         const user = await User.findOne(

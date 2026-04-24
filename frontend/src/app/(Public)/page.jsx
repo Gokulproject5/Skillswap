@@ -1,6 +1,7 @@
 import { Wave } from '@/Component/Home/Wave'
 import { HandshakeIcon, LucideUserRoundSearch, MessageSquare, Stars, UserPlus2 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import React from 'react'
 import { BiVideo } from 'react-icons/bi'
 import { FaMagnifyingGlass } from 'react-icons/fa6'
@@ -66,8 +67,11 @@ const Home = () => {
 
 
           <div className='w-full max-w-125 lg:scale-125 transition-transform duration-700 ease-out'>
-            <img
+            <Image
               src="/hero.png"
+              width={800}
+              height={800}
+              priority
               className='w-full drag h-full object-contain'
               alt="Skill sharing illustration"
             />

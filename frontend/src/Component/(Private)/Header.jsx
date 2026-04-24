@@ -12,6 +12,7 @@ import { LogOut } from "lucide-react";
 import { clearUser } from "@/feature/loginSlice";
 import { HiMiniUsers } from "react-icons/hi2";
 import { useAuth } from "@/Context/authContext";
+import { clearNotifications } from "@/feature/notifySlice";
 
 
 const Header = () => {
@@ -19,7 +20,8 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, logout } = useAuth();
     const pathname = usePathname();
-    const isactive = pathname
+    const isactive = pathname;
+    const notifyCount = useSelector((state) => state.notify.notifications.length);
 
     const input = {
         type: "text",
@@ -58,7 +60,7 @@ const Header = () => {
                     </div>
 
 
-                    {/* Desktop Navigation */}
+                    {/* Desktop  */}
                     <div className="hidden md:block select-none cursor-pointer">
                         <nav>
                             <ul className="flex items-center space-x-2 md:space-x-4 text-gray-700">
@@ -72,10 +74,9 @@ const Header = () => {
                                             className="rounded-full p-2 text-xl md:text-2xl transition-colors hover:bg-gray-100 focus:text-blue-500 focus:outline-none"
                                         >
                                             <Icon />
-                                            {hasBadge && (
-                                                <span className="absolute right-2 top-2 flex h-2 w-2">
-                                                    <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+                                            {hasBadge && notifyCount > 0 && (
+                                                <span className="absolute -right-0.5 -top-0.5 flex items-center justify-center h-4 w-4 rounded-full bg-red-500 text-white text-[9px] font-bold">
+                                                    {notifyCount > 9 ? '9+' : notifyCount}
                                                 </span>
                                             )}
                                         </button>
@@ -89,7 +90,7 @@ const Header = () => {
                                         <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
 
                                             <Image sizes="true"
-                                                src={user?.profile_pic || '/logo2.png'}
+                                                src={user?.profile_pic || '/fallback.jpg'}
                                                 alt="User"
                                                 fill
                                                 className="object-cover transition-transform group-hover:scale-110"
@@ -140,8 +141,10 @@ const Header = () => {
                                         className="relative p-3 bg-gray-50 rounded-xl text-2xl text-gray-700"
                                     >
                                         <Icon />
-                                        {hasBadge && (
-                                            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500"></span>
+                                        {hasBadge && notifyCount > 0 && (
+                                            <span className="absolute -right-0.5 -top-0.5 flex items-center justify-center h-4 w-4 rounded-full bg-red-500 text-white text-[9px] font-bold">
+                                                {notifyCount > 9 ? '9+' : notifyCount}
+                                            </span>
                                         )}
                                     </button>
                                     <span className="text-[10px] mt-1 text-gray-500 font-medium">{name}</span>

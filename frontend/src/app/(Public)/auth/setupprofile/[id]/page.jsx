@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 const SetupProfile = () => {
     const route = useRouter();
@@ -43,16 +44,16 @@ const SetupProfile = () => {
 
        
         if (!response.ok) {
-            alert(result.message || "Update failed");
+            toast.error(result.message || "Update failed");
             return;
         }
 
-        alert("Profile update successful!");
+        toast.success("Profile update successful!");
         route.push("/findtalent");
 
     } catch (err) {
         console.error(err);
-        alert("Internal server error" , err);
+        toast.error("Internal server error");
     }
 };
 

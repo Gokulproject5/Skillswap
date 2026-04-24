@@ -14,7 +14,7 @@ export default function PrivateLayout({ children }) {
   return (
     <main className=" overflow-hidden">
       <SocketProvider>
-        <ProtectRoute >
+        <ProtectRoute>
         <Header />
         <Navbar />
         <Notify />

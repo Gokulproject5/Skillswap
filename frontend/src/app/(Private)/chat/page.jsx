@@ -22,7 +22,6 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
-        // behavior: 'smooth'
       });
     }
   }, [messages]);

@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { Link } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 
 
@@ -21,9 +22,10 @@ const AdminPage = () => {
       });
 
       if (!res.ok) {
-        alert("Error: Could not accept job")
+        toast.error("Error: Could not accept job")
+        return;
       }
-      alert("job accepted");
+      toast.success("job accepted");
 
       setJobs(prevJobs => prevJobs.filter(job => job._id !== id));
 
@@ -46,11 +48,11 @@ const AdminPage = () => {
     });
 
     if (!response.ok) {
-      alert("Error: Could not delete job");
+      toast.error("Error: Could not delete job");
       return;
     }
 
-    alert("deleted the job");
+    toast.success("deleted the job");
     setJobs(prevJobs => prevJobs.filter(job => job._id !== id));
   }
   useEffect(() => {

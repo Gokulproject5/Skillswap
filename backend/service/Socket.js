@@ -2,6 +2,21 @@ import { Server } from 'socket.io';
 import Message from "../models/message.model.js";
 
 const userSocketMap = new Map();
+let ioInstance;
+
+export const sendNotification = (userId, eventName, payload) => {
+    console.log(`[Socket] Attempting to send ${eventName} to user: ${userId}`);
+    if (!ioInstance) {
+        console.log(`[Socket] ioInstance not available`);
+        return;
+    }
+    const socketId = userSocketMap.get(userId);
+    console.log(`[Socket] Socket ID for user ${userId}: ${socketId}`);
+    if (socketId) {
+        ioInstance.to(socketId).emit(eventName, payload);
+        console.log(`[Socket] Emitted ${eventName} to socket ${socketId}`);
+    }
+};
 
 export const initSocket = (server) => {
     const io = new Server(server, {
@@ -11,6 +26,7 @@ export const initSocket = (server) => {
             credentials: true
         }
     });
+    ioInstance = io;
 
     io.on("connection", (socket) => {
         socket.emit("me", socket.id);

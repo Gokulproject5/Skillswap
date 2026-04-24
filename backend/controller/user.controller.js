@@ -123,3 +123,46 @@ export const deleteUser = (req, res) => {
     })
 }
 
+// Report a user directly from their profile
+export const reportUser = async (req, res) => {
+    try {
+        const { targetUserId, reason, category } = req.body;
+        const reporterId = req.user.id;
+
+        if (!targetUserId) return res.status(400).json({ message: "Target user required" });
+        if (targetUserId === reporterId) return res.status(400).json({ message: "Cannot report yourself" });
+
+        const target = await User.findById(targetUserId);
+        if (!target) return res.status(404).json({ message: "User not found" });
+
+        // Prevent duplicate reports from same reporter
+        if (target.reportedBy?.includes(reporterId)) {
+            return res.status(400).json({ message: "You have already reported this user" });
+        }
+
+        // Store report details
+        const update = {
+            $inc: { reportCount: 1, loyaltyPoints: -20 },
+            $addToSet: { reportedBy: reporterId },
+            $push: {
+                reports: {
+                    reporter: reporterId,
+                    reason: reason || "",
+                    category: category || "other",
+                    date: new Date(),
+                }
+            }
+        };
+
+        const updated = await User.findByIdAndUpdate(targetUserId, update, { new: true });
+
+        // Auto-ban at 5+ reports
+        if (updated.reportCount >= 5 && !updated.isBanned) {
+            await User.findByIdAndUpdate(targetUserId, { isBanned: true });
+        }
+
+        res.json({ message: "Report submitted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

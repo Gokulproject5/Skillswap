@@ -11,11 +11,11 @@ const Navbar = () => {
 
     return (
 
-        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2  lg:left-14 lg:top-1/3 z-50 transition-all duration-300 w-fit">
+        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2  lg:left-14 lg:top-1/4 z-50 transition-all duration-300 w-fit">
 
             <ul className='flex lg:flex-col  items-center gap-2 md:gap-4 p-2 md:p-3 rounded-full bg-white/90 backdrop-blur-md border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.1)]'>
                 {menuItems.map((menu) => {
-                    const isActive = pathname.includes(menu.href);
+                    const isActive = pathname === menu.href || pathname.startsWith(menu.href + '/');
                     return (
                         <li key={menu.name} className="relative group">
                             {/* Tooltip */}

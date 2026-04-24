@@ -4,13 +4,20 @@ import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { useAuth } from './authContext';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '@/feature/notifySlice';
 
 const SocketContext = createContext();
 
-const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL);
+let socket;
+if (typeof window !== 'undefined') {
+  socket = io(process.env.NEXT_PUBLIC_API_BASE_URL);
+}
 
 const ContextProvider = ({ children }) => {
   const { user: currentUser } = useAuth();
+  const dispatch = useDispatch();
 
   const [stream, setStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
@@ -51,10 +58,29 @@ const ContextProvider = ({ children }) => {
       leaveCall(false);
     });
 
+    socket.on('receiveMessage', (data) => {
+      if (typeof window !== 'undefined' && window.location.pathname !== '/chat') {
+        toast(`New message received`, { icon: '💬' });
+        dispatch(addNotification({
+          title: 'New Message',
+          message: 'You have a new chat message.',
+          type: 'message'
+        }));
+      }
+    });
+
+    socket.on('notification', (data) => {
+      const icon = data.type === 'accept' ? '🎉' : data.type === 'request' ? '🤝' : 'ℹ️';
+      toast(`${icon} ${data.message}`);
+      dispatch(addNotification(data));
+    });
+
     return () => {
       socket.off('callUser');
       socket.off('callAccepted');
       socket.off('callEnded');
+      socket.off('receiveMessage');
+      socket.off('notification');
     };
   }, [currentUser]);
 

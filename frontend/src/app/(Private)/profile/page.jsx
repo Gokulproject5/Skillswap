@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import ProfileUpdate from '@/Component/(Private)/DialogForm';
 import { useAuth } from '@/Context/authContext';
+import toast from 'react-hot-toast';
 
 
 
@@ -51,12 +52,12 @@ const Profile = () => {
       }
 
       const res = await response.json();
-      alert("Profile Updated Successfully!");
+      toast.success("Profile Updated Successfully!");
       handleModal();
 
     } catch (error) {
       console.error("Update error:", error);
-      alert(`Failed to update: ${error.message}`);
+      toast.error(`Failed to update: ${error.message}`);
     }
   };
 
@@ -95,7 +96,7 @@ const Profile = () => {
                 <div className="relative -mt-24 mb-4">
                   <div className="w-40 h-40 rounded-full border-4 border-white overflow-hidden bg-white shadow-sm">
                     <img
-                      src={user?.profile_pic || "/logo.png"}
+                      src={user?.profile_pic || "/fallback.jpg"}
                       alt={user?.name || "user"}
                       className="w-full h-full drag object-cover"
                     />

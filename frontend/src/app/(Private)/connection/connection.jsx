@@ -87,10 +87,8 @@ const Connection = () => {
 
 
 export const Count = () => {
-
-    const connectionCount = useSelector(
-        (state) => state?.loginData?.currentUser?.connection?.length || 0
-    );
+    const { user } = useAuth()
+    const connectionCount = user?.connection.length-1 || 0
 
     return (
         <div className="text-sm  font-medium bg-blue-600 rounded py-1 px-2 text-white shadow-md shadow-blue-500/50">

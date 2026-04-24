@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Reusable middleware factory
+
 export default function validateBody(schema) {
   return (req, res, next) => {
     const parsed = schema.safeParse(req.body);

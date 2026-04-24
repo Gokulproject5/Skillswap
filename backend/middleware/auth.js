@@ -21,3 +21,24 @@ export const auth = async (req, res, next) => {
         return res.status(403).json({ message: "Invalid or Expired Token" });
     }
 };
+
+export const optionalAuth = async (req, res, next) => {
+    const authHeader = req.headers.Authorization || req.headers.authorization;
+    const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+    const cookieToken = req.cookies.auth_token;
+    const token = bearerToken || cookieToken;
+
+    if (!token) {
+        req.user = null;
+        return next();
+    }
+
+    try {
+        const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        req.user = verified;
+        next();
+    } catch (err) {
+        req.user = null;
+        next();
+    }
+};

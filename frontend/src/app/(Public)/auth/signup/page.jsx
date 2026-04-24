@@ -1,4 +1,5 @@
 "use client"
+import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -19,6 +20,7 @@ import { zodResolver} from "@hookform/resolvers/zod"
 
 const SignUpCard = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useRouter();
 
     const {
@@ -32,7 +34,7 @@ const SignUpCard = () => {
 
     //  submit register form 
     const onSubmit = async (Formdata) => {
-
+        setIsSubmitting(true);
         const slugify = (text) => {
             return text
                 .toString()
@@ -43,8 +45,8 @@ const SignUpCard = () => {
                 .replace(/--+/g, '-');
         };
         const slug = slugify(Formdata.fullname);
-         const data = {...Formdata,slug}
-         const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL
+        const data = {...Formdata,slug}
+        const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL
         try {
             const res = await fetch(`${api_base_url}/register`, {
                 method: "POST",
@@ -57,18 +59,16 @@ const SignUpCard = () => {
 
             if (!res.ok) {
                 const errorData = await res.json()
-                throw new Error("Register failed" + " " + errorData.message);
-
+                throw new Error(errorData.message || "Register failed");
             }
             const result = await res.json()
-            alert("Register SuccessFull");
+            toast.success("Register Successful!");
             
             navigate.push(`/auth/setupprofile/${result._id}`)
         } catch (err) {
-            alert("Regisiter failed" + err)
+            toast.error(err.message || "Register failed");
+            setIsSubmitting(false);
         }
-
-
     }
 
     return (
@@ -174,9 +174,11 @@ const SignUpCard = () => {
                                 {errors.password && <span className='text-red-500 text-xs font-medium mt-1'>{errors.password.message}</span>}
                             </div>
 
-                            <button className='w-full flex justify-center items-center text-white bg-blue-600 hover:bg-blue-700 py-3.5 rounded font-bold transition-all shadow-lg shadow-blue-200 active:scale-[0.98]'>
-                                Sign Up
-
+                            <button 
+                                disabled={isSubmitting}
+                                className='w-full flex justify-center items-center text-white bg-blue-600 hover:bg-blue-700 py-3.5 rounded font-bold transition-all shadow-lg shadow-blue-200 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed'
+                            >
+                                {isSubmitting ? "Signing up..." : "Sign Up"}
                             </button>
 
                             <div className="relative flex py-2 items-center">

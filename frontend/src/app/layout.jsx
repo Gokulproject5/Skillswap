@@ -1,6 +1,7 @@
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
 import { AuthProvider } from "@/Context/authProvider";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "SkillSwap ",
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
       <body
         className={` min-h-full bg-gray-100 inter flex flex-col overflow-x-clip`}
       >
+        <Toaster position="top-center" />
         <ReduxProvider>
           <AuthProvider>
             {children}

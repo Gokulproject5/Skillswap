@@ -61,6 +61,24 @@ const userSchema = new Schema({
     connection: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    }],
+    // Loyalty points earned by completing exchanges
+    loyaltyPoints: { type: Number, default: 0 },
+    // Scam prevention: report count & ban flag
+    reportCount: { type: Number, default: 0 },
+    isBanned: { type: Boolean, default: false },
+    // Badge tier unlocked by loyalty points
+    badge: { type: String, enum: ['none', 'bronze', 'silver', 'gold', 'platinum'], default: 'none' },
+    // Total completed exchanges
+    exchangesCompleted: { type: Number, default: 0 },
+    // Track who reported this user (for dedup)
+    reportedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    // Full report log
+    reports: [{
+        reporter: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        reason: { type: String, default: '' },
+        category: { type: String, enum: ['spam', 'scam', 'fake', 'harassment', 'other'], default: 'other' },
+        date: { type: Date, default: Date.now }
     }]
 }, {
     timestamps: true

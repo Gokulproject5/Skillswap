@@ -6,6 +6,7 @@ import { BiPlus } from "react-icons/bi";
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from "react-redux";
 import { setJobs } from "@/feature/jobSlice";
+import toast from 'react-hot-toast';
 
 const Page = () => {
   const [Active, SetActive] = useState("All");
@@ -74,7 +75,7 @@ const Page = () => {
 
       if (res.ok) {
 
-        alert("Job created successfully!");
+        toast.success("Job created successfully!");
         close();
         const updatedResponse = await fetch(`${api_base_url}/job_post`);
         const result = await updatedResponse.json();
@@ -83,11 +84,11 @@ const Page = () => {
 
         const errorData = await res.json();
 
-        alert(`Failed to post: ${errorData.message || "Unknown error"}`);
+        toast.error(`Failed to post: ${errorData.message || "Unknown error"}`);
       }
     } catch (err) {
       console.error("Internal frontend error:", err);
-      alert("Internal server error occurred while posting.");
+      toast.error("Internal server error occurred while posting.");
     }
   };
 
