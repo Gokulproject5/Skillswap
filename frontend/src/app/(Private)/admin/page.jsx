@@ -13,7 +13,7 @@ const AdminPage = () => {
   //  handle accept the job post 
   const handleAccept = async (id) => {
     try {
-      const res = await fetch(`${api_base_url}/admin/${id}`, {
+      const res = await fetch(`/api/admin/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -39,7 +39,7 @@ const AdminPage = () => {
 
   const handleReject = async (id) => {
 
-    const response = await fetch(`${api_base_url}/admin/${id}`, {
+    const response = await fetch(`/api/admin/${id}`, {
       method: "DELETE",
       headers: {
         "Content_Type": "application/json"
@@ -57,7 +57,7 @@ const AdminPage = () => {
   }
   useEffect(() => {
     const jobFetch = async () => {
-      const response = await fetch(`${api_base_url}/admin`, {
+      const response = await fetch(`/api/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
