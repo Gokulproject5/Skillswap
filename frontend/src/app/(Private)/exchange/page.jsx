@@ -293,13 +293,13 @@ export default function ExchangePage() {
   const [tab, setTab] = useState("active");
 
   const fetchExchanges = () =>
-    fetch(`${API}/api/exchange/my`, { credentials: "include" })
+    fetch(`/api/exchange/my`, { credentials: "include" })
       .then(r => r.json())
       .then(data => setExchanges(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
 
   const fetchLeaderboard = () =>
-    fetch(`${API}/api/exchange/leaderboard`, { credentials: "include" })
+    fetch(`/api/exchange/leaderboard`, { credentials: "include" })
       .then(r => r.json())
       .then(data => setLeaderboard(Array.isArray(data) ? data : []));
 
@@ -307,7 +307,7 @@ export default function ExchangePage() {
 
   const onTick = async (exchangeId, itemId) => {
     try {
-      const res = await fetch(`${API}/api/exchange/tick`, {
+      const res = await fetch(`/api/exchange/tick`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         credentials: "include", body: JSON.stringify({ exchangeId, itemId })
       });
@@ -321,7 +321,7 @@ export default function ExchangePage() {
 
   const onAddTask = async (exchangeId, label) => {
     try {
-      const res = await fetch(`${API}/api/exchange/add-task`, {
+      const res = await fetch(`/api/exchange/add-task`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         credentials: "include", body: JSON.stringify({ exchangeId, label })
       });
@@ -334,7 +334,7 @@ export default function ExchangePage() {
 
   const onComplete = async (exchangeId, rating = 0, review = '') => {
     try {
-      const res = await fetch(`${API}/api/exchange/complete`, {
+      const res = await fetch(`/api/exchange/complete`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         credentials: "include", body: JSON.stringify({ exchangeId, rating, review })
       });
@@ -347,7 +347,7 @@ export default function ExchangePage() {
   };
 
   const onReport = async (exchangeId, reason) => {
-    await fetch(`${API}/api/exchange/report`, {
+    await fetch(`/api/exchange/report`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       credentials: "include", body: JSON.stringify({ exchangeId, reason })
     });

@@ -38,7 +38,7 @@ const Profile = () => {
     const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
-      const response = await fetch(`${api_base_url}/user/${user._id}`, {
+      const response = await fetch(`/api/user/${user._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

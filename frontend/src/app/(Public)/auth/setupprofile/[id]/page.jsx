@@ -30,7 +30,7 @@ const SetupProfile = () => {
     try {
         const id = param.id; 
      
-        const response = await fetch(`${api_base_url}/user/${id}`, {
+        const response = await fetch(`/api/user/${id}`, {
             method: 'PUT', 
             headers: {
                 'Content-Type': 'application/json',

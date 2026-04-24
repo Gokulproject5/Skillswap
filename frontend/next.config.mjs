@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+
+const proxyUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -21,15 +23,16 @@ const nextConfig = {
       },
     ],
   },
-//  async redirects() {
-//     return [
-//       {
-//         source: '/',
-//         destination: '/dashboard',
-//         permanent: false, 
-//       },
-//     ]
-//   },
+async rewrites() {
+    return {
+      afterFiles: [
+        {
+          source: "/api/:path*",
+          destination: `${proxyUrl}/:path*`,
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;

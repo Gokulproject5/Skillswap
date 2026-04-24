@@ -173,7 +173,7 @@ const Page = () => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${api_base_url}/user`, {
+        const response = await fetch(`/api/user`, {
           method: "GET",
           credentials: "include"
         });
@@ -236,7 +236,7 @@ const Page = () => {
       const fetchChatHistory = async () => {
         try {
           const response = await fetch(
-            `${api_base_url}/message/${user._id}/${activeUser._id}`,
+            `/api/message/${user._id}/${activeUser._id}`,
             { credentials: 'include' }
           );
           const messages = await response.json();

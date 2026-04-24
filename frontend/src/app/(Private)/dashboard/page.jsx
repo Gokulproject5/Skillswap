@@ -20,7 +20,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user?._id) return;
-    fetch(`${API}/api/request/my-request/${user._id}`, { credentials: "include" })
+    fetch(`/api/request/my-request/${user._id}`, { credentials: "include" })
       .then(r => r.json())
       .then(data => dispatch(setRequest(Array.isArray(data) ? data : [])))
       .catch(() => { })
@@ -28,7 +28,7 @@ export default function Dashboard() {
   }, [user?._id]);
 
   useEffect(() => {
-    fetch(`${API}/api/exchange/my`, { credentials: "include" })
+    fetch(`/api/exchange/my`, { credentials: "include" })
       .then(r => r.json())
       .then(data => setExchanges(Array.isArray(data) ? data.filter(e => e.status === "active") : []))
       .catch(() => { })
@@ -37,7 +37,7 @@ export default function Dashboard() {
 
   const handleRequest = async (requestId, action) => {
     try {
-      const res = await fetch(`${API}/api/request/handle-request`, {
+      const res = await fetch(`/api/request/handle-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

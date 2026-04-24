@@ -23,7 +23,7 @@ const Page = () => {
     const getUser = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`${api_base_url}/user`, { method: "GET", credentials: "include" });
+        const response = await fetch(`/api/user`, { method: "GET", credentials: "include" });
         const result = await response.json();
         const data = await result.filter((data) => data._id !== user._id)
         dispatch(setUsers(data));

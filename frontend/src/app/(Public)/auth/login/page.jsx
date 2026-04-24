@@ -21,7 +21,7 @@ const LoginCard = () => {
         setIsSubmitting(true);
         try {
             const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            const res = await fetch(`${apiBaseUrl}/login`, {
+            const res = await fetch(`/api/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

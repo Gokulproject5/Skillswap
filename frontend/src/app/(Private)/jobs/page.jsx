@@ -41,7 +41,7 @@ const Page = () => {
     const fetchData = async () => {
 
       try {
-        const response = await fetch(`${api_base_url}/job_post`, {
+        const response = await fetch(`/api/job_post`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -66,7 +66,7 @@ const Page = () => {
     const Data = { ...data, skills };
 
     try {
-      const res = await fetch(`${api_base_url}/job_post`, {
+      const res = await fetch(`/api/job_post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(Data),
@@ -77,7 +77,7 @@ const Page = () => {
 
         toast.success("Job created successfully!");
         close();
-        const updatedResponse = await fetch(`${api_base_url}/job_post`);
+        const updatedResponse = await fetch(`/api/job_post`);
         const result = await updatedResponse.json();
         dispatch(setJobs(result.data));
       } else {

@@ -44,9 +44,9 @@ app.use('/user', userRoute)
 app.use('/', Auth)
 app.use('/job_post', jobRoute);
 app.use('/admin', adminRouter);
-app.use('/api/request', request);
+app.use('/request', request);
 app.use('/message', messageRoute);
-app.use('/api/exchange', exchangeRoute);
+app.use('/exchange', exchangeRoute);
 
 
 

@@ -48,7 +48,7 @@ const SignUpCard = () => {
         const data = {...Formdata,slug}
         const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL
         try {
-            const res = await fetch(`${api_base_url}/register`, {
+            const res = await fetch(`/api/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

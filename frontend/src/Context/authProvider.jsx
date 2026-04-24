@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   const refreshSession = useCallback(async () => {
     try {
-      const response = await fetch(`${api_url}/me`, {
+      const response = await fetch(`/api/me`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
-      await fetch(`${api_url}/logout`, {
+      await fetch(`$/api/logout`, {
         method: "POST",
         credentials: "include",
       });

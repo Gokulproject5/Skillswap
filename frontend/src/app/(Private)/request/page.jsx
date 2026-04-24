@@ -9,7 +9,8 @@ import { FiClock, FiXCircle } from "react-icons/fi";
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 
-/* ───────────── Incoming Request Card ───────────── */
+
+
 const RequestCard = ({ name, proposal, skill, request, img, accept, reject, slug }) => (
   <div className='flex flex-col md:flex-row md:justify-between md:items-center bg-white py-4 rounded-2xl px-4 shadow-sm hover:shadow-md transition-shadow gap-4'>
     <div className='flex items-center space-x-4'>
@@ -40,7 +41,7 @@ const RequestCard = ({ name, proposal, skill, request, img, accept, reject, slug
   </div>
 );
 
-/* ───────────── Sent Proposal Card ───────────── */
+
 const SentCard = ({ name, proposal, skill, img, slug, status, onCancel, requestId }) => (
   <div className='flex flex-col md:flex-row md:justify-between md:items-center bg-white py-4 rounded-2xl px-4 shadow-sm hover:shadow-md transition-shadow gap-4'>
     <div className='flex items-center space-x-4'>
@@ -75,7 +76,7 @@ const SentCard = ({ name, proposal, skill, img, slug, status, onCancel, requestI
   </div>
 );
 
-/* ───────────── Page ───────────── */
+
 const Page = () => {
   const { user } = useAuth();
   const incoming = useSelector((state) => state?.request?.RequestData) || [];
@@ -86,7 +87,7 @@ const Page = () => {
   // Accept incoming request
   const handleAccept = async (requestId) => {
     try {
-      const response = await fetch(`${API}/api/request/handle-request`, {
+      const response = await fetch(`/api/request/handle-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ requestId, action: "accepted" }),
@@ -103,7 +104,7 @@ const Page = () => {
   // Reject incoming request
   const handleReject = async (requestId) => {
     try {
-      const response = await fetch(`${API}/api/request/handle-request`, {
+      const response = await fetch(`/api/request/handle-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ requestId, action: "rejected" }),
@@ -120,7 +121,7 @@ const Page = () => {
   // Cancel a sent proposal
   const handleCancelProposal = async (requestId) => {
     try {
-      const response = await fetch(`${API}/api/request/handle-request`, {
+      const response = await fetch(`/api/request/handle-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ requestId, action: "rejected" }),
@@ -138,7 +139,7 @@ const Page = () => {
   useEffect(() => {
     const fetchRequest = async () => {
       try {
-        const res = await fetch(`${API}/api/request/my-request/${user._id}`, {
+        const res = await fetch(`/api/request/my-request/${user._id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include"
@@ -156,7 +157,7 @@ const Page = () => {
   useEffect(() => {
     const fetchSent = async () => {
       try {
-        const res = await fetch(`${API}/api/request/my-sent-request/${user._id}`, {
+        const res = await fetch(`/api/request/my-sent-request/${user._id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include"
