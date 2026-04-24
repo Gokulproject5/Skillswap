@@ -156,7 +156,7 @@ export const reportUser = async (req, res) => {
 
         const updated = await User.findByIdAndUpdate(targetUserId, update, { new: true });
 
-        // Auto-ban at 5+ reports
+    
         if (updated.reportCount >= 5 && !updated.isBanned) {
             await User.findByIdAndUpdate(targetUserId, { isBanned: true });
         }

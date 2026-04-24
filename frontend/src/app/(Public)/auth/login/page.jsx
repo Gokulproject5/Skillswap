@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
 
 
 const LoginCard = () => {
@@ -42,7 +41,9 @@ const LoginCard = () => {
             }
             if (res.ok) {
                 toast.success("Login successful!");
+
                 await login();
+                setIsSubmitting(true)
             }
 
 

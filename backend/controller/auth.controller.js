@@ -85,7 +85,7 @@ export const logoutUser = async (req, res) => {
     res.clearCookie("auth_token", {
         httpOnly: true,
         sameSite: "none",
-         secure: true,   
+         secure: process.env.NODE_ENV === 'production',   
         path: "/",
     });
     res.json({

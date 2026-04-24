@@ -42,7 +42,7 @@ export const Request = async (req, res) => {
     }
 };
 
-// my sent requests (outgoing)
+// my sent requests 
 export const mySentRequests = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -90,7 +90,7 @@ export const handleRequest = async (req, res) => {
                 User.findByIdAndUpdate(requestDoc.receiver, { $addToSet: { connection: requestDoc.sender } }, { new: true }),
             ]);
 
-            // Auto-create exchange session using skills from both profiles
+            
             const skillsAtoB = requestDoc.skillsOffered?.length
                 ? requestDoc.skillsOffered
                 : senderUser?.skills?.slice(0, 2) || [];
@@ -106,7 +106,7 @@ export const handleRequest = async (req, res) => {
                     userB: requestDoc.receiver,
                     skillsAtoB,
                     skillsBtoA,
-                    checklist: [], // starts empty — both users add their own tasks
+                    checklist: [], 
                 });
             }
 

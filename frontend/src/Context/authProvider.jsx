@@ -1,8 +1,8 @@
-// context/AuthProvider.js
 "use client";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "./authContext";
+import toast from "react-hot-toast";
 
 export const AuthProvider = ({ children }) => {
   const router = useRouter();
@@ -36,11 +36,14 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async () => {
     const me = await refreshSession();
     if (me) {
+      toast.success("Login successful!");
       router.push(me.role === "admin" ? "/admin" : "/dashboard");
+    } else {
+      toast.error("Failed to sync user session.");
     }
   }, [refreshSession, router]);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await fetch(`${api_url}/logout`, {
         method: "POST",
@@ -50,10 +53,9 @@ export const AuthProvider = ({ children }) => {
       console.error("Logout failed", e);
     } finally {
       setUser(null);
-
-      router.replace("/auth/login")
+      router.replace("/auth/login");
     }
-  };
+  }, [api_url, router]);
 
   const value = useMemo(() => ({
     user,
