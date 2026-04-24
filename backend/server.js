@@ -16,16 +16,24 @@ import exchangeRoute from "./routes/exchange.route.js";
 
 
 // intialize the app using express
- const app = express();
+const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const port = 8608;
 
-const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
+    .split(",")
+    .map((o) => o.trim());
 
 app.use(cors({
-    origin: allowedOrigin,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS blocked for origin: ${origin}`));
+        }
+    },
     credentials: true,
 }));
 

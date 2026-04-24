@@ -40,10 +40,7 @@ const LoginCard = () => {
                 return;
             }
             if (res.ok) {
-                toast.success("Login successful!");
-
                 await login();
-                setIsSubmitting(true)
             }
 
 
