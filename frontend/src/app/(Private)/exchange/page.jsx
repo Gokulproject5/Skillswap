@@ -14,7 +14,7 @@ const BADGE = {
   bronze: { emoji: "🥉", label: "Bronze" },
   silver: { emoji: "🥈", label: "Silver" },
   gold: { emoji: "🥇", label: "Gold" },
-  platinum: { emoji: "💎", label: "Diamond" },
+  diamond: { emoji: "💎", label: "Diamond" },
 };
 
 const MILESTONES = [
@@ -144,15 +144,15 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
                     onClick={() => exchange.status === 'active' && isMyTask && onTick(exchange._id, item._id)}
                     disabled={exchange.status !== 'active' || !isMyTask}
                     title={!isMyTask ? "Your partner's task" : isDone && !doneByMe ? "Completed by partner" : ""}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl borde text-left transition-all
-                      ${isDone ? "bg-green-50 border-green-200" : isMyTask ? "bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50/30" : "bg-gray-50 border-gray-100 opacity-60"}
+                    className={`w-full shadow flex items-center gap-3 p-3 rounded-xl border text-left transition-all
+                      ${isDone ? "bg-green100 border-green-200 " : isMyTask ? "bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50/30" : "bg-gray-50 border-gray-100 opacity-60"}
                       ${!isMyTask || exchange.status !== 'active' ? "cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     {isDone
                       ? <CheckCircle2 size={16} className="text-green-500 shrink-0" />
                       : <Circle size={16} className={`shrink-0 ${isMyTask ? "text-gray-300" : "text-gray-200"}`} />}
                     <div className="flex-1 min-w-0">
-                      <span className={`text-sm ${isDone ? "line-through text-gray-400" : "text-gray-700 font-medium"}`}>
+                      <span className={`text-lg ${isDone ? "line-through text-green-500 " : "text-gray-700 font-medium"}`}>
                         {item.label}
                       </span>
                       {item.assignedTo !== 'shared' && (
@@ -199,7 +199,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
                 </div>
               ) : total > 0 ? (
                 <button onClick={() => setAddingTask(true)} className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-blue-600 mt-2 transition-colors">
-                  <Plus size={13} /> Add custom task
+                  <Plus size={13} /> Add  task
                 </button>
               ) : null
             )}
@@ -409,7 +409,7 @@ export default function ExchangePage() {
         {/* RIGHT */}
         <div className="space-y-4">
 
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+          <div className="bg-white rounded border border-gray-100 shadow-sm p-5">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Loyalty Points</p>
             <div className="flex items-center justify-between mb-3">
               <p className="text-3xl font-extrabold text-gray-900">{pts.toLocaleString()}</p>
@@ -438,7 +438,7 @@ export default function ExchangePage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+          <div className="bg-white rounded border border-gray-100 shadow-sm p-5">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">How to earn</p>
             <div className="space-y-3">
               {[
@@ -463,7 +463,7 @@ export default function ExchangePage() {
             </div>
           </div>
 
-          <div className="bg-amber-50 bordr border-amber-200 rounded-xl p-4">
+          <div className="bg-amber-50  border-amber-200 rounded p-4">
             <p className="text-xs font-bold text-amber-700 mb-1.5">⚠️ Scam Protection</p>
             <p className="text-xs text-amber-600 leading-relaxed">
               Users with <strong>5+ reports</strong> are automatically restricted. Always use our exchange system and report bad actors immediately.

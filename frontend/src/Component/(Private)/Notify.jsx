@@ -22,7 +22,7 @@ export const Notify = () => {
       {/* Notification Panel */}
       <div className={`fixed top-0 right-0 z-50 h-screen bg-white shadow-2xl transform transition-all duration-500 ease-in-out w-full sm:w-80 md:w-96
           mt-15 md:mt-19 
-          ${isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none md:rounded-l-3xl"}`}
+          ${isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none md:rounded-l-3xl"}`} 
       >
         {/* Header */}
         <div className='sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between z-10'>
@@ -54,7 +54,7 @@ export const Notify = () => {
         </div>
 
         {/* Content Area */}
-        <div className='overflow-y-auto h-[calc(100vh-80px)] custom-scrollbar'>
+        <div className='overflow-y-auto h-[calc(100vh-80px)] no-scroll'>
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full p-6 text-center">
               <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
@@ -70,13 +70,13 @@ export const Notify = () => {
                 return (
                   <div
                     key={n.id}
-                    className={`group relative rounded-2xl text-gray-700 text-sm border py-3 px-4 transition-all cursor-pointer shadow-sm ${config.bg} ${config.border}`}
+                    className={`group relative rounded text-gray-700 text-sm border py-3 px-4 transition-all cursor-pointer shadow  ${config.border}`}
                   >
                     <div className='flex items-start gap-3'>
-                      {/* Icon */}
+                      {/* Icon
                       <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-white shadow-sm text-base`}>
                         {config.icon}
-                      </div>
+                      </div> */}
 
                       {/* Text */}
                       <div className='flex-1 min-w-0'>
@@ -99,7 +99,7 @@ export const Notify = () => {
                     </div>
 
                     {/* Unread dot */}
-                    <span className={`absolute top-3 left-3 w-1.5 h-1.5 rounded-full ${config.dot}`} />
+                    {/* <span className={`absolute top-3 left-3 w-1.5 h-1.5 rounded-full ${config.dot}`} /> */}
                   </div>
                 );
               })}

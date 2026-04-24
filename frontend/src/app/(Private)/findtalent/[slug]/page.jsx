@@ -38,7 +38,7 @@ const Profile = () => {
   const handleSubmitProposal = async ({ skillsOffered, skillsRequested, message }) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/request/send-request`, {
+      const response = await fetch(`/api/request/send-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,7 +56,7 @@ const Profile = () => {
       toast.success("Proposal sent! 🤝");
       setShowModal(false);
     } catch (error) {
-      toast.error(error.message || "An error occurred");
+      toast.error("Request already Send" );
     } finally {
       setIsSubmitting(false);
     }
@@ -65,7 +65,7 @@ const Profile = () => {
   const handleSubmitReport = async (category, reason) => {
     setIsReporting(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/report`, {
+      const res = await fetch(`/user/report`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

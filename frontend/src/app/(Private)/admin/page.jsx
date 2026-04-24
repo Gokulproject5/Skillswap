@@ -90,7 +90,7 @@ const AdminPage = () => {
                 <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">User Stats</h2>
                 <p className="text-3xl font-bold mt-1 text-gray-900">5</p>
               </div>
-              <p className="text-xs text-blue-600 font-medium mt-2">↑ 12% from last month</p>
+              {/* <p className="text-xs text-blue-600 font-medium mt-2">↑ 12% from last month</p> */}
             </div>
 
             {/* Jobs Posted */}
@@ -99,7 +99,7 @@ const AdminPage = () => {
                 <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Jobs Posted</h2>
                 <p className="text-3xl font-bold mt-1 text-gray-900">4</p>
               </div>
-              <p className="text-xs text-green-600 font-medium mt-2">3 currently active</p>
+              {/* <p className="text-xs text-green-600 font-medium mt-2">3 currently active</p> */}
             </div>
 
             {/* Reports */}
@@ -108,7 +108,7 @@ const AdminPage = () => {
                 <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Report Stats</h2>
                 <p className="text-3xl font-bold mt-1 text-gray-900">4</p>
               </div>
-              <p className="text-xs text-red-500 font-medium mt-2">1 pending review</p>
+              {/* <p className="text-xs text-red-500 font-medium mt-2">1 pending review</p> */}
             </div>
 
           </div>

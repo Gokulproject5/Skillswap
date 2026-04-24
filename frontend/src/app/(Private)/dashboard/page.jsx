@@ -122,7 +122,7 @@ export default function Dashboard() {
                     <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1.5">
                       <div className="bg-blue-600 h-1.5 rounded-full transition-all duration-700" style={{ width: `${myProgress}%` }} />
                     </div>
-                    <div className="flex justify-between text-[10px] text-gray-400 font-medium">
+                    <div className="flex justify-between text-[13px] text-gray-400 font-medium">
                       <span>{done}/{total} tasks</span>
                       <Link href="/exchange" className="text-blue-500 hover:underline">Continue →</Link>
                     </div>

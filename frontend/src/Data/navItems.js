@@ -24,8 +24,8 @@ export const navItems = [
         hasBadge: true,
     },
 
-    {
-        name: 'settings',
-        Icon: IoSettingsOutline
-    },
+    // {
+    //     name: 'settings',
+    //     Icon: IoSettingsOutline
+    // },
 ];
