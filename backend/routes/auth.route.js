@@ -13,10 +13,10 @@ route.get("/me", optionalAuth, getCurrentUser);
 route.post("/logout", logoutUser);
 route.post("/register", createUser);
 route.get("/auth/google", passport.authenticate("google", {
-    scope: ["profile", "email"]
+    scope: ["profile", "email"],session:false
 }));
 route.get("/auth/google/cb", passport.authenticate("google", {
-    failureRedirect: `${process.env.FRONTEND_URL}/auth/login`
+    failureRedirect: `${process.env.FRONTEND_URL}/auth/login`,session:false
 }), googleAuthHandler)
 
 

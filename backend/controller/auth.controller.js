@@ -102,7 +102,7 @@ export const googleAuthHandler = (req, res) => {
     try {
         if (!req.user) {
             console.error("Google Auth Error: req.user is missing");
-            return res.redirect(`${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/login?error=auth_failed`);
+            return res.redirect(`${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/login`);
         }
 
         const token = jwt.sign(
@@ -115,8 +115,8 @@ export const googleAuthHandler = (req, res) => {
 
         res.cookie('auth_token', token, {
             httpOnly: true,
-            sameSite: isProduction ? 'none' : 'lax',
-            secure: isProduction,
+            sameSite: 'none',
+            secure: true,
             maxAge: 3600000,
         });
 
@@ -133,6 +133,6 @@ export const googleAuthHandler = (req, res) => {
     } catch (e) {
         console.error("Google Auth Handler Error:", e);
         const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
-        return res.redirect(`${frontendUrl}/auth/login?error=server_error`);
+        return res.redirect(`${frontendUrl}/auth/login`);
     }
 }
