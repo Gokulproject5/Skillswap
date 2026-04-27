@@ -99,7 +99,6 @@ export const logoutUser = async (req, res) => {
 // Google signin
 
 export const googleAuthHandler = (req, res) => {
- console.log(process.env.JWT_SECRET_KEY);
  
    try {
     
