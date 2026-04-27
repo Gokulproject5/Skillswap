@@ -22,6 +22,7 @@ import session from "express-session";
 
 // intialize the app using express
 const app = express();
+app.set('trust proxy', 1);
 app.use(cookieParser());
 app.use(express.json());
 

@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
-      await fetch(`$/api/logout`, {
+      await fetch(`/api/logout`, {
         method: "POST",
         credentials: "include",
       });

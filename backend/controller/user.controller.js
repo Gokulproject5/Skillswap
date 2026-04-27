@@ -59,9 +59,11 @@ export const createUser = async (req, res) => {
             id: _id
         }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
+        const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('auth_token', token, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
+            secure: isProduction,
             maxAge: 3600000,
         });
         res.status(201).json({
