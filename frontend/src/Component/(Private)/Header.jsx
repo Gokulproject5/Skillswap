@@ -29,7 +29,7 @@ const Header = () => {
     };
 
     const dispatch = useDispatch();
-    
+
     //  handle logout 
     const handleLogout = () => {
         logout()
@@ -150,6 +150,13 @@ const Header = () => {
                                     <span className="text-[10px] mt-1 text-gray-500 font-medium">{name}</span>
                                 </li>
                             ))}
+
+                            <li className="flex ">
+                                <button  className="relative p-3 bg-gray-50 rounded-xl text-2xl text-gray-700" onClick={handleLogout}>
+                                    <LogOut className="size-6" />
+                                    <span className="text-[10px] mt-1 text-gray-500 font-medium">Logout</span>
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 )}

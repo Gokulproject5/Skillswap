@@ -40,7 +40,6 @@ export const initSocket = (server) => {
             if (socket.userId) {
                 userSocketMap.delete(socket.userId);
             }
-            socket.broadcast.emit("callEnded");
         });
 
         socket.on("callUser", ({ userToCall, signalData, from, name }) => {

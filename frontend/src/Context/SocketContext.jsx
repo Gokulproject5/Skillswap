@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useRef, useEffect } from 'react';
+import React, { createContext, useState, useRef, useEffect, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { useAuth } from './authContext';
@@ -84,20 +84,23 @@ const ContextProvider = ({ children }) => {
     };
   }, [currentUser]);
 
-  const setupMedia = async () => {
+  const setupMedia = useCallback(async () => {
     if (stream) return stream;
     if (mediaPromiseRef.current) return mediaPromiseRef.current;
 
+    console.log("[Media] Requesting user media...");
     mediaPromiseRef.current = new Promise(async (resolve, reject) => {
       try {
         const currentStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        console.log("[Media] Local stream acquired");
         setStream(currentStream);
         if (myVideo.current) {
           myVideo.current.srcObject = currentStream;
         }
         resolve(currentStream);
       } catch (err) {
-        console.error("Failed to get local stream:", err);
+        console.error("[Media] Failed to get local stream:", err);
+        toast.error("Camera/Mic access denied or not found");
         reject(err);
       }
     });
@@ -108,9 +111,9 @@ const ContextProvider = ({ children }) => {
     } finally {
       mediaPromiseRef.current = null;
     }
-  };
+  }, [stream]);
 
-  const answerCall = async () => {
+  const answerCall = useCallback(async () => {
     setCallAccepted(true);
 
     let activeStream = stream;
@@ -140,9 +143,9 @@ const ContextProvider = ({ children }) => {
 
     peer.signal(call.signal);
     connectionRef.current = peer;
-  };
+  }, [stream, call, setupMedia]);
 
-  const callUser = async (id) => {
+  const callUser = useCallback(async (id) => {
     setIsCalling(true);
     setCallEnded(false);
     setCallAccepted(false);
@@ -179,18 +182,24 @@ const ContextProvider = ({ children }) => {
     peer.on('close', () => leaveCall(false));
 
     socket.off('callAccepted').on('callAccepted', (signal) => {
-      setCallAccepted(true);
-      setIsCalling(false);
-      peer.signal(signal);
+      if (peer && !peer.destroyed) {
+        setCallAccepted(true);
+        setIsCalling(false);
+        peer.signal(signal);
+      }
     });
 
     connectionRef.current = peer;
-  };
+  }, [stream, call, me, currentUser, setupMedia]);
 
-  const leaveCall = (emitEnd = true) => {
+  const leaveCall = useCallback((emitEnd = true) => {
     setCallEnded(true);
     setIsCalling(false);
     setCallAccepted(false);
+
+    if (socket) {
+      socket.off('callAccepted');
+    }
 
     if (emitEnd && socket && (call.from || call.userToCall)) {
       socket.emit('endCall', { to: call.from || call.userToCall });
@@ -214,9 +223,37 @@ const ContextProvider = ({ children }) => {
       setRemoteStream(null);
       if (userVideo.current) userVideo.current.srcObject = null;
     }
-  };
+  }, [call, stream, remoteStream]);
 
-  const toggleScreenShare = async () => {
+  const toggleRemotePiP = useCallback(async () => {
+    try {
+      if (userVideo.current) {
+        if (document.pictureInPictureElement) {
+          await document.exitPictureInPicture();
+        } else {
+          await userVideo.current.requestPictureInPicture();
+        }
+      }
+    } catch (error) {
+      console.error("Remote PiP failed", error);
+    }
+  }, [userVideo]);
+
+  const toggleLocalPiP = useCallback(async () => {
+    try {
+      if (myVideo.current) {
+        if (document.pictureInPictureElement) {
+          await document.exitPictureInPicture();
+        } else {
+          await myVideo.current.requestPictureInPicture();
+        }
+      }
+    } catch (error) {
+      console.error("Local PiP failed", error);
+    }
+  }, [myVideo]);
+
+  const toggleScreenShare = useCallback(async () => {
     if (!isScreenSharing) {
       try {
         const screenStream = await navigator.mediaDevices.getDisplayMedia({ cursor: true });
@@ -253,13 +290,14 @@ const ContextProvider = ({ children }) => {
       myVideo.current.srcObject = stream;
       setIsScreenSharing(false);
     }
-  };
+  }, [isScreenSharing, stream]);
 
   return (
     <SocketContext.Provider value={{
       call, callAccepted, myVideo, userVideo, stream, remoteStream,
       callEnded, me, callUser, leaveCall, answerCall,
       setupMedia, isScreenSharing, toggleScreenShare,
+      toggleRemotePiP, toggleLocalPiP,
       setName: setUserName, userName, socket, isCalling, setIsCalling
     }}>
       {children}
