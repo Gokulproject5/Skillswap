@@ -66,7 +66,7 @@ export const getCurrentUser = async (req, res) => {
 
     try {
         const user = await User.findOne(
-            { _id: loginUser.id },"-password")
+            { _id: loginUser.id }, "-password")
 
         if (!user) {
             return res.status(404).json({
@@ -93,4 +93,35 @@ export const logoutUser = async (req, res) => {
     res.json({
         message: "Logged out successfull"
     })
+}
+
+
+// Google signin
+
+export const googleAuthHandler = (req, res) => {
+
+    const token = jwt.sign(
+        { id: req.user._id, role: req.user.role },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: '1h' }
+    );
+
+    const isProduction = process.env.NODE_ENV === 'production';
+
+
+    res.cookie('auth_token', token, {
+        httpOnly: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        secure: isProduction,
+        maxAge: 3600000,
+    });
+    if (req.user.isNewUser) {
+     return res.redirect(`${process.env.FRONTEND_URL}/auth/setupprofile/${req.user._id}`)
+    }else{
+        if (req.user.role === "admin") {
+
+            return res.redirect(`${process.env.FRONTEND_URL}/admin`);
+        }
+      return  res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    }
 }

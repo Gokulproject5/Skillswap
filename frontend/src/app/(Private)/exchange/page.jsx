@@ -79,7 +79,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
             <Link href={`/findtalent/${partner?.slug}`} className="font-bold text-gray-800 text-sm hover:text-blue-600 truncate block">
               {partner?.name}
             </Link>
-            <span className={`text-[10px] font-bold uppercase tracking-wider border px-2 py-0.5 rounded-full ${statusBadge}`}>
+            <span className={`text-[10px] font-bold uppercase tracking-wider border-2 px-2 py-0.5 rounded-full ${statusBadge}`}>
               {exchange.status}
             </span>
           </div>
@@ -99,7 +99,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
           <div className="text-center hidden sm:block">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Partner</p>
             <div className="flex items-center gap-2">
-              <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="w-20 h-1.5 bg-gray-200 rounded overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${partnerProgress}%` }} />
               </div>
               <span className="text-xs font-bold text-emerald-600">{partnerProgress}%</span>
@@ -145,7 +145,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
                     disabled={exchange.status !== 'active' || !isMyTask}
                     title={!isMyTask ? "Your partner's task" : isDone && !doneByMe ? "Completed by partner" : ""}
                     className={`w-full shadow flex items-center gap-3 p-3 rounded-xl border text-left transition-all
-                      ${isDone ? "bg-green100 border-green-200 " : isMyTask ? "bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50/30" : "bg-gray-50 border-gray-100 opacity-60"}
+                      ${isDone ? "bg-green-100 border-green-200 " : isMyTask ? "bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50/30" : "bg-gray-50 border-gray-100 opacity-60"}
                       ${!isMyTask || exchange.status !== 'active' ? "cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     {isDone
@@ -167,8 +167,8 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
 
 
               {total === 0 && exchange.status === 'active' && !addingTask && (
-                <div className="flex flex-col items-center justify-center py-6 rounded-xl border border-dashed border-gray-200 bg-gray-50/60 text-center gap-2">
-                  <span className="text-2xl"><LiaNotesMedicalSolid /></span>
+                <div className="flex flex-col items-center justify-center py-6 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/60 text-center gap-2">
+                  <span className="text-4xl text-blue-700"><LiaNotesMedicalSolid /></span>
                   <p className="text-sm font-semibold text-gray-600">No tasks yet</p>
                   <p className="text-xs text-gray-400 max-w-55 leading-relaxed">
                     You and your partner can add tasks to track your progress together.
@@ -252,7 +252,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
                 </div>
               )}
 
-              {/* {!alreadyReported ? (
+              {!alreadyReported ? (
                 <button
                   onClick={() => setReportOpen(!reportOpen)}
                   className="flex items-center gap-2 py-2 px-4 rounded-xl text-sm font-bold border border-red-200 text-red-500 hover:bg-red-50 transition-all"
@@ -261,7 +261,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
                 </button>
               ) : (
                 <span className="text-xs text-red-400 font-semibold self-center">⚠️ Reported</span>
-              )} */}
+              )}
             </div>
           )}
 
@@ -471,7 +471,7 @@ export default function ExchangePage() {
           </div>
 
           {/* Leaderboard */}
-          {/* <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-50">
               <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">🏆 Top Exchangers</p>
             </div>
@@ -492,10 +492,11 @@ export default function ExchangePage() {
                   <p className="text-sm font-extrabold text-blue-600 shrink-0">{u.loyaltyPoints}</p>
                 </div>
               ))}
-          </div> */}
+          </div>
 
         </div>
       </div>
     </div>
   );
 }
+

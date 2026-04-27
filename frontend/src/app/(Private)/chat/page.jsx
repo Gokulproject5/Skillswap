@@ -10,6 +10,7 @@ import { SocketContext } from '@/Context/SocketContext';
 import { setUsers } from '@/feature/userSlice';
 import { BanIcon } from 'lucide-react';
 import { useAuth } from '@/Context/authContext';
+import Link from 'next/link';
 
 
 // ChatBox
@@ -25,9 +26,9 @@ const ChatBox = ({ activeUser, messages, inputText, setInputText, onSendMessage,
       });
     }
   }, [messages]);
-
+  
   useEffect(() => {
-    if (user?.name && setName) {
+    if (user?.name==user && setName) {
       setName(user.name);
     }
   }, [user, setName]);
@@ -197,10 +198,10 @@ const Page = () => {
   // Filter connection data
   useEffect(() => {
     if (dbUsers.length > 0) {
-      const connections = dbUsers.filter((d) =>
-        user?.connection?.includes(d._id) || [].includes(d._id)
+      const connections = dbUsers.filter((data) =>
+        user?.connection?.includes(data._id) || [].includes(data._id)
       );
-      setChatUsers(user?.connection?.length > 0 ? connections : dbUsers);
+      setChatUsers(user?.connection?.length > 0 ? connections : "");
     }
   }, [dbUsers, user]);
 
@@ -318,7 +319,9 @@ const Page = () => {
             {loading ? (
               <div className="p-4 text-center text-sm text-gray-500">Loading chats...</div>
             ) : chatUsers.length === 0 ? (
-              <div className="p-4 text-center text-sm text-gray-400">No active connections found.</div>
+              <div className="p-4 text-center text-sm text-gray-400"><p>No active connections found.</p>
+               <Link href="/findtalent" className='text-blue-400 hover:underline'>Find Talent</Link>
+              </div>
             ) : (
               chatUsers.map((chatUser, index) => {
                 const messages = chatHistories[chatUser.name] || [];

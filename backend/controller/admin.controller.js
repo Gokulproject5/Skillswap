@@ -1,4 +1,6 @@
 import job_post from "../models/jobPost.model.js"
+import User from "../models/user.model.js"
+import Exchange from "../models/exchange.model.js"
 
 
 // get job post for approvals
@@ -44,6 +46,24 @@ export const updateJob = async (req, res) => {
             message: "internal server error",
             error: e.message
         });
+    }
+}
+
+export const getStats = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalJobs = await job_post.countDocuments();
+        const pendingJobs = await job_post.countDocuments({ verify: false });
+        const disputedExchanges = await Exchange.countDocuments({ status: 'disputed' });
+
+        res.status(200).json({
+            totalUsers,
+            totalJobs,
+            pendingJobs,
+            disputedExchanges
+        });
+    } catch (e) {
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 

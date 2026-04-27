@@ -51,6 +51,11 @@ const LoginCard = () => {
         }
     };
 
+
+    const handleGoogleSign = async () => {
+           window.location.href = '/api/auth/google';
+    }
+
     return (
         <>
             <div className='flex justify-center my-5  bg-gray-100 p-4'>
@@ -125,7 +130,7 @@ const LoginCard = () => {
 
 
                             <div className="grid grid-cols-2 text-gray-600 gap-4">
-                                <button type="button" className="flex space-x-2 items-center justify-center py-2.5 border-2 border-gray-300 group rounded hover:text-white hover:bg-blue-500 transition-colors shadow-sm">
+                                <button onClick={handleGoogleSign} type="button" className="flex space-x-2 items-center justify-center py-2.5 border-2 border-gray-300 group rounded hover:text-white hover:bg-blue-500 transition-colors shadow-sm">
                                     <FaGoogle />
                                     <span className='font-bold'>Google</span>
 

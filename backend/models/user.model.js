@@ -16,12 +16,19 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Email is required"],
         unique: true,
-        match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please enter a valid email address']
+        match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please enter a valid email address'],
+        sparse: true
     },
     password: {
         type: String,
-        required: [true, "Password is Required"],
-
+        required: function () {
+            return !this.googleId;
+        },
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true
     },
     role: { type: String, enum: ["user", "admin"], default: "user" },
 
@@ -64,16 +71,16 @@ const userSchema = new Schema({
     }],
 
     loyaltyPoints: { type: Number, default: 0 },
-   
+
     reportCount: { type: Number, default: 0 },
     isBanned: { type: Boolean, default: false },
-   
+
     badge: { type: String, enum: ['none', 'bronze', 'silver', 'gold', 'platinum'], default: 'none' },
-    
+
     exchangesCompleted: { type: Number, default: 0 },
 
     reportedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    
+
     reports: [{
         reporter: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         reason: { type: String, default: '' },

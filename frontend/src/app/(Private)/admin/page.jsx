@@ -7,8 +7,9 @@ import toast from 'react-hot-toast'
 
 const AdminPage = () => {
   const [jobs, setJobs] = useState([]);
-
-  const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalPendingJobs, setTotalPendingJobs] = useState(0);
+  const [totalJobs, setTotalJobs] = useState(0);
 
   //  handle accept the job post 
   const handleAccept = async (id) => {
@@ -28,6 +29,7 @@ const AdminPage = () => {
       toast.success("job accepted");
 
       setJobs(prevJobs => prevJobs.filter(job => job._id !== id));
+      fetchStats();
 
     } catch (e) {
       console.log(e);
@@ -42,7 +44,7 @@ const AdminPage = () => {
     const response = await fetch(`/api/admin/${id}`, {
       method: "DELETE",
       headers: {
-        "Content_Type": "application/json"
+        "Content-Type": "application/json"
       },
       credentials: "include"
     });
@@ -54,6 +56,7 @@ const AdminPage = () => {
 
     toast.success("deleted the job");
     setJobs(prevJobs => prevJobs.filter(job => job._id !== id));
+    fetchStats();
   }
   useEffect(() => {
     const jobFetch = async () => {
@@ -72,6 +75,24 @@ const AdminPage = () => {
     jobFetch();
   }, []);
 
+  const fetchStats = async () => {
+    const res = await fetch(`/api/admin/stats`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    })
+    const result = await res.json();
+    setTotalUsers(result.totalUsers);
+    setTotalJobs(result.totalJobs);
+    setTotalPendingJobs(result.pendingJobs);
+    }
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
 
   return (
     <section className='min-h-screen my-19 px-10 text-gray-700 bg-white' id='admin_panel'>
@@ -84,32 +105,24 @@ const AdminPage = () => {
         <section className="py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-gray-50 rounded-2xl shadow-inner min-h-40">
 
-            {/* Total Users */}
-            <div className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div>
-                <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">User Stats</h2>
-                <p className="text-3xl font-bold mt-1 text-gray-900">5</p>
+            {[
+              { label: "Total Users", value: totalUsers },
+              { label: "Total Jobs", value: totalJobs },
+              { label: "Pending Jobs", value: totalPendingJobs },
+            ].map((stat, index) => (
+              <div key={index} className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
+                <div>
+                  <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">
+                    {stat.label}
+                  </h2>
+                  <p className="text-3xl font-bold mt-1 text-gray-900">
+                    {stat.value}
+                  </p>
+                </div>
               </div>
-              {/* <p className="text-xs text-blue-600 font-medium mt-2">↑ 12% from last month</p> */}
-            </div>
+            ))}
 
-            {/* Jobs Posted */}
-            <div className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div>
-                <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Jobs Posted</h2>
-                <p className="text-3xl font-bold mt-1 text-gray-900">4</p>
-              </div>
-              {/* <p className="text-xs text-green-600 font-medium mt-2">3 currently active</p> */}
-            </div>
 
-            {/* Reports */}
-            <div className="flex flex-col justify-between p-5 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div>
-                <h2 className="text-gray-500 text-sm font-medium uppercase tracking-wider">Report Stats</h2>
-                <p className="text-3xl font-bold mt-1 text-gray-900">4</p>
-              </div>
-              {/* <p className="text-xs text-red-500 font-medium mt-2">1 pending review</p> */}
-            </div>
 
           </div>
         </section>

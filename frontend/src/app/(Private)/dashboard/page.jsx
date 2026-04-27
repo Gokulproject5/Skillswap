@@ -72,14 +72,14 @@ export default function Dashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "Connections", value: user?.connection?.length-1 || 0, },
+          { label: "Connections", value: user?.connection?.length  || 0, },
           { label: "Loyalty Points", value: user?.loyaltyPoints || 0, },
           { label: "Exchanges Done", value: user?.exchangesCompleted || 0, },
           { label: "Active Swaps", value: exchanges.length, },
         ].map(({ label, value }) => (
-          <div key={label} className="bg-white flex items-center gap-3 rounded-xl border border-gray-100 shadow-sm p-8">
-            <p className="text-2xl font-extrabold text-gray-900">{value}</p>
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mt-0.5">{label}</p>
+          <div key={label} className="bg-white flex items-center gap-3 rounded-xl border-2 border-double border-white  shadow-xl p-8">
+            <p className="text-2xl font-extrabold text-gray-700">{value}</p>
+            <p className="text-[11px] font-semibold text-blue-400 uppercase tracking-wider mt-0.5">{label}</p>
           </div>
         ))}
       </div>
