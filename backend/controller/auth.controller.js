@@ -99,15 +99,18 @@ export const logoutUser = async (req, res) => {
 // Google signin
 
 export const googleAuthHandler = (req, res) => {
-
-    const token = jwt.sign(
+ console.log(process.env.JWT_SECRET_KEY);
+ 
+   try {
+    
+     const token = jwt.sign(
         { id: req.user._id, role: req.user.role },
         process.env.JWT_SECRET_KEY,
         { expiresIn: '1h' }
     );
 
     const isProduction = process.env.NODE_ENV === 'production';
-
+    
 
     res.cookie('auth_token', token, {
         httpOnly: true,
@@ -115,6 +118,7 @@ export const googleAuthHandler = (req, res) => {
         secure: isProduction,
         maxAge: 3600000,
     });
+    
     if (req.user.isNewUser) {
      return res.redirect(`${process.env.FRONTEND_URL}/auth/setupprofile/${req.user._id}`)
     }else{
@@ -124,4 +128,7 @@ export const googleAuthHandler = (req, res) => {
         }
       return  res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
     }
+   } catch (e) {
+    res.json({message:e})
+   } 
 }
