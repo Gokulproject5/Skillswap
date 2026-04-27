@@ -24,7 +24,11 @@ import session from "express-session";
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
-const port = 8608;
+
+
+const port = process.env.PORT || 8608;
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
     .split(",")
@@ -32,6 +36,7 @@ const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000")
 
 app.use(cors({
     origin: (origin, callback) => {
+
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -52,25 +57,25 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-
         const user = await User.findById(id);
         done(null, user)
     } catch (e) {
-        console.log(e);
+        console.error("Passport Deserialization Error:", e);
         done(e, false)
-
     }
 })
 
 
-
-
+//  Secure Session Configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'fallback-secret-for-dev-only',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false
+        secure: isProduction,
+        httpOnly: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
@@ -84,12 +89,13 @@ app.use(passport.session())
 // using routes
 app.use('/user', userRoute);
 app.use('/', Auth);
-app.use("/",Oauth)
+app.use("/", Oauth)
 app.use('/job_post', jobRoute);
 app.use('/admin', adminRouter);
 app.use('/request', request);
 app.use('/message', messageRoute);
 app.use('/exchange', exchangeRoute);
+
 const server = http.createServer(app);
 initSocket(server)
 
@@ -98,5 +104,5 @@ app.get("/dashboard", auth, (req, res) => {
 });
 
 server.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running on port ${port} (Production: ${isProduction})`);
 });

@@ -99,35 +99,40 @@ export const logoutUser = async (req, res) => {
 // Google signin
 
 export const googleAuthHandler = (req, res) => {
- 
-   try {
-    
-     const token = jwt.sign(
-        { id: req.user._id, role: req.user.role },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: '1h' }
-    );
-
-    const isProduction = process.env.NODE_ENV === 'production';
-    
-
-    res.cookie('auth_token', token, {
-        httpOnly: true,
-        sameSite: isProduction ? 'none' : 'lax',
-        secure: isProduction,
-        maxAge: 3600000,
-    });
-    
-    if (req.user.isNewUser) {
-     return res.redirect(`${process.env.FRONTEND_URL}/auth/setupprofile/${req.user._id}`)
-    }else{
-        if (req.user.role === "admin") {
-
-            return res.redirect(`${process.env.FRONTEND_URL}/admin`);
+    try {
+        if (!req.user) {
+            console.error("Google Auth Error: req.user is missing");
+            return res.redirect(`${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/login?error=auth_failed`);
         }
-      return  res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+
+        const token = jwt.sign(
+            { id: req.user._id, role: req.user.role },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: '1h' }
+        );
+
+        const isProduction = process.env.NODE_ENV === 'production';
+
+        res.cookie('auth_token', token, {
+            httpOnly: true,
+            sameSite: isProduction ? 'none' : 'lax',
+            secure: isProduction,
+            maxAge: 3600000,
+        });
+
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+
+        if (req.user.isNewUser) {
+            return res.redirect(`${frontendUrl}/auth/setupprofile/${req.user._id}`);
+        } else {
+            if (req.user.role === "admin") {
+                return res.redirect(`${frontendUrl}/admin`);
+            }
+            return res.redirect(`${frontendUrl}/dashboard`);
+        }
+    } catch (e) {
+        console.error("Google Auth Handler Error:", e);
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        return res.redirect(`${frontendUrl}/auth/login?error=server_error`);
     }
-   } catch (e) {
-    res.json({message:e})
-   } 
 }
