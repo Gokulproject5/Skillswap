@@ -290,7 +290,7 @@ export const reportUserFromExchange = async (req, res) => {
 
 export const getLeaderboard = async (req, res) => {
     try {
-        const users = await User.find({ isBanned: false })
+        const users = await User.find({ isBanned: false,loyaltyPoints:{$gt:0} })
             .select('name profile_pic slug loyaltyPoints badge exchangesCompleted')
             .sort({ loyaltyPoints: -1 })
             .limit(10);

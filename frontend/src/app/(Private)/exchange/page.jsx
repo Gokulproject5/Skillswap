@@ -477,7 +477,10 @@ export default function ExchangePage() {
             </div>
             {leaderboard.length === 0
               ? <p className="text-center text-gray-400 text-sm py-6">No data yet</p>
-              : leaderboard.map((u, i) => (
+              : leaderboard.map((u, i) => {
+                u.loyaltyPoints>0
+              return(
+              
                 <div key={u._id} className="flex items-center gap-3 px-5 py-3 border-b border-gray-50 last:border-0">
                   <span className="text-sm font-extrabold w-5 text-center text-gray-400">
                     {i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1}
@@ -491,7 +494,7 @@ export default function ExchangePage() {
                   </div>
                   <p className="text-sm font-extrabold text-blue-600 shrink-0">{u.loyaltyPoints}</p>
                 </div>
-              ))}
+              )})}
           </div>
 
         </div>

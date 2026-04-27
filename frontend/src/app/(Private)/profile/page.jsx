@@ -24,10 +24,7 @@ const Profile = () => {
     return Array.isArray(data) ? data : data.split(',').map(s => s.trim());
   };
 
-
-
-
-  const handleModal = () => {
+  const handleModal =async () => {
     setIsOpen(!isOpen)
   }
 
@@ -35,7 +32,6 @@ const Profile = () => {
   const onSubmit = async (data) => {
 
     const finalProfile = { ...data, skills: offering, seeking: learning };
-    const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
       const response = await fetch(`/api/user/${user._id}`, {

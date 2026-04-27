@@ -71,6 +71,11 @@ const SignUpCard = () => {
         }
     }
 
+
+    // handle google sign
+    const handleGoogleSign =()=>{
+        window.location.href ='/api/auth/google'
+    }
     return (
         <>
 
@@ -188,7 +193,7 @@ const SignUpCard = () => {
                             </div>
 
                             <div className="grid  text-gray-500 gap-2">
-                                <button type="button" className="flex group items-center justify-center py-2.5 border border-gray-200 rounded hover:bg-blue-500/80 hover:text-white transition-colors shadow-sm">
+                                <button onClick={handleGoogleSign} type="button" className="flex group items-center justify-center py-2.5 border border-gray-200 rounded hover:bg-blue-500/80 hover:text-white transition-colors shadow-sm">
                                     <FaGoogle className="w-5 h-5 mr-2 " />
                                     <span className="text-sm font-semibold ">Google</span>
                                 </button>

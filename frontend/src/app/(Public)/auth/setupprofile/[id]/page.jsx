@@ -1,70 +1,68 @@
 "use client"
+import SkillSelector from '@/Component/(Private)/FormComponent/SkillSelect'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
-const SetupProfile = () => {
+const SetupProfile = ({ value }) => {
     const route = useRouter();
     const param = useParams();
+    const [offering, setOffering,] = useState([]);
+    const [learning, setLearning] = useState([]);
 
-    const { register, handleSubmit, control, formState: { errors } } = useForm({
+
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             exp: '',
             loc: '',
             about: '',
-            skills: [],
-            seeking: [],
+            skills: offering,
+            seeking: learning,
             proofLink: ''
         }
     });
 
-    const availableSkills = ["React", "UI Design", "Python", "JavaScript", "Figma", "Node.js", "AI/ML", "SQL"];
 
-  const onSubmit = async (data) => {
-    const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL;
-    
-    try {
-        const id = param.id; 
-     
-        const response = await fetch(`/api/user/${id}`, {
-            method: 'PUT', 
-            headers: {
-                'Content-Type': 'application/json',
-                
-            },
-            body: JSON.stringify(data),
-            credentials: "include"
-        });
+    const onSubmit = async (datas) => {
 
-        const result = await response.json();
+        const data = { ...datas, skills: offering, seeking: learning }
 
-       
-        if (!response.ok) {
-            toast.error(result.message || "Update failed");
-            return;
+        try {
+            const id = param.id;
+
+            const response = await fetch(`/api/user/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                body: JSON.stringify(data),
+                credentials: "include"
+            });
+
+            const result = await response.json();
+
+
+            if (!response.ok) {
+                toast.error(result.message || "Update failed");
+                return;
+            }
+
+            toast.success("Profile update successful!");
+            route.push("/findtalent");
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Internal server error");
         }
-
-        toast.success("Profile update successful!");
-        route.push("/findtalent");
-
-    } catch (err) {
-        console.error(err);
-        toast.error("Internal server error");
-    }
-};
-
-
-
-    const handleSkillToggle = (skill, currentArray, onChange) => {
-        const updated = currentArray.includes(skill)
-            ? currentArray.filter(s => s !== skill)
-            : [...currentArray, skill];
-        onChange(updated);
     };
+
+
 
     return (
         <section className='min-h-screen bg-gray-50 flex items-center justify-center p-4'>
@@ -129,39 +127,28 @@ const SetupProfile = () => {
 
                         {/* Skills Mastered */}
                         <div>
-                            <label className='block text-xs font-bold uppercase text-gray-500 mb-2'>Skills You Master</label>
-                            <Controller
-                                control={control}
-                                name="skills"
-                                render={({ field: { value, onChange }  }) => (
-                                    <div className='flex flex-wrap gap-2'>
-                                        {availableSkills.map((skill) => (
-                                            <button key={skill} type='button' onClick={() => handleSkillToggle(skill, value, onChange)}
-                                                className={`py-1.5 px-3 rounded-full text-xs font-medium border transition-all ${value.includes(skill) ? "bg-blue-600 border-blue-600 text-white shadow-md" : "bg-white border-gray-200 text-gray-600 hover:border-blue-300"}`}>
-                                                {skill}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+
+                            <SkillSelector
+                                label="Skills You Master"
+                                color="yellow"
+                                placeholder={"search the skill"}
+                                selectedSkills={offering}
+                                onAdd={(s) => setOffering([...offering, s])}
+                                onRemove={(s) => setOffering(offering.filter(i => i !== s))}
                             />
+
                         </div>
+
 
                         {/* Skills to Learn */}
                         <div>
-                            <label className='block text-xs font-bold uppercase text-gray-500 mb-2'>Skills You Want to Learn</label>
-                            <Controller
-                                control={control}
-                                name="seeking"
-                                render={({ field: { value, onChange } }) => (
-                                    <div className='flex flex-wrap gap-2'>
-                                        {availableSkills.map((skill) => (
-                                            <button key={skill} type='button' onClick={() => handleSkillToggle(skill, value, onChange)}
-                                                className={`py-1.5 px-3 rounded-full text-xs font-medium border transition-all ${value.includes(skill) ? "bg-green-600 border-green-600 text-white shadow-md" : "bg-white border-gray-200 text-gray-600 hover:border-green-300"}`}>
-                                                {skill}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                            <SkillSelector
+                                label="Skills You Want to Learn"
+                                color="blue"
+                                placeholder={"search the skill"}
+                                selectedSkills={learning}
+                                onAdd={(s) => setLearning([...learning, s])}
+                                onRemove={(s) => setLearning(learning.filter(i => i !== s))}
                             />
                         </div>
                         <div>

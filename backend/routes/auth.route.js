@@ -10,7 +10,7 @@ const route = express.Router();
 
 route.post("/login", validateBody(loginSchema), loginAuth);
 route.get("/me", optionalAuth, getCurrentUser);
-route.post("/logout", logoutUser);
+route.post("/logout",validateBody(registerSchema), logoutUser);
 route.post("/register", createUser);
 route.get("/auth/google", passport.authenticate("google", {
     scope: ["profile", "email"],session:false
