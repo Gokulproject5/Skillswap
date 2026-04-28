@@ -33,6 +33,7 @@ const Connection = () => {
                                 fill
                                 className="object-cover"
                                 alt={user.name}
+                                sizes="80px"
                             />
                         </div>
 

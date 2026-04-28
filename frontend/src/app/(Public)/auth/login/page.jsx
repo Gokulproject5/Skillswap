@@ -1,13 +1,11 @@
 "use client"
 import toast from 'react-hot-toast';
-import { AuthContext, useAuth } from '@/Context/authContext';
-import { setuser } from '@/feature/loginSlice';
+import {  useAuth } from '@/Context/authContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { FaGoogle } from 'react-icons/fa';
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 
@@ -128,16 +126,16 @@ const LoginCard = () => {
                             </div>
 
 
-                            <div className="grid grid-cols-2 text-gray-600 gap-4">
+                            <div className="grid  text-gray-600 gap-4">
                                 <button onClick={handleGoogleSign} type="button" className="flex space-x-2 items-center justify-center py-2.5 border-2 border-gray-300 group rounded hover:text-white hover:bg-blue-500 transition-colors shadow-sm">
                                     <FaGoogle />
                                     <span className='font-bold'>Google</span>
 
                                 </button>
-                                <button type="button" className="flex items-center justify-center py-2.5 border-2 border-gray-300 space-x-2 rounded group hover:text-gray-50 hover:bg-black transition-colors shadow-sm">
+                                {/* <button type="button" className="flex items-center justify-center py-2.5 border-2 border-gray-300 space-x-2 rounded group hover:text-gray-50 hover:bg-black transition-colors shadow-sm">
                                     <FaGithub />
                                     <span className='font-bold'>GitHub</span>
-                                </button>
+                                </button> */}
                             </div>
                         </form>
                     </div>

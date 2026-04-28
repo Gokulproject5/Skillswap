@@ -145,14 +145,14 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
                     disabled={exchange.status !== 'active' || !isMyTask}
                     title={!isMyTask ? "Your partner's task" : isDone && !doneByMe ? "Completed by partner" : ""}
                     className={`w-full shadow flex items-center gap-3 p-3 rounded-xl border text-left transition-all
-                      ${isDone ? "bg-green-100 border-green-200 " : isMyTask ? "bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50/30" : "bg-gray-50 border-gray-100 opacity-60"}
+                      ${isDone ? "bg-green-500 border-green-200" : isMyTask ? "bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50/30" : "bg-gray-50 border-gray-100 opacity-60"}
                       ${!isMyTask || exchange.status !== 'active' ? "cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     {isDone
-                      ? <CheckCircle2 size={16} className="text-green-500 shrink-0" />
+                      ? <CheckCircle2 size={16} className=" text-white shrink-0" />
                       : <Circle size={16} className={`shrink-0 ${isMyTask ? "text-gray-300" : "text-gray-200"}`} />}
                     <div className="flex-1 min-w-0">
-                      <span className={`text-lg ${isDone ? "line-through text-green-500 " : "text-gray-700 font-medium"}`}>
+                      <span className={`text-lg ${isDone ? "line-through text-white " : "text-gray-700 font-medium"}`}>
                         {item.label}
                       </span>
                       {item.assignedTo !== 'shared' && (
@@ -267,7 +267,7 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
 
 
           {reportOpen && (
-            <div className="bg-red-50 border border-red-100 rounded-xl p-4 space-y-3">
+            <div className=" border border-red-100 rounded-xl p-4 space-y-3">
               <p className="text-sm font-bold text-red-600">Report scam / bad behavior</p>
               <textarea rows={3} value={reason} onChange={e => setReason(e.target.value)}
                 placeholder="Describe what happened..." className="w-full border border-red-200 rounded-lg p-2.5 text-sm resize-none outline-none focus:border-red-400 bg-white" />

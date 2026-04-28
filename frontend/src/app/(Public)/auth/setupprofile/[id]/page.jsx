@@ -122,7 +122,7 @@ const SetupProfile = ({ value }) => {
                                 placeholder="Briefly describe your passion..."
                                 className='w-full px-4 py-2.5 rounded shadow-inner border border-gray-200 bg-gray-50 outline-none focus:border-blue-500 transition-all resize-none'
                             />
-                            {errors.about && <span className='text-xs text-red-400'>{errors.about.message}</span>}
+                            {errors.about && <span className='text-xs  text-red-400'>{errors.about.message}</span>}
                         </div>
 
                         {/* Skills Mastered */}
@@ -130,7 +130,7 @@ const SetupProfile = ({ value }) => {
 
                             <SkillSelector
                                 label="Skills You Master"
-                                color="yellow"
+                                color="purple"
                                 placeholder={"search the skill"}
                                 selectedSkills={offering}
                                 onAdd={(s) => setOffering([...offering, s])}

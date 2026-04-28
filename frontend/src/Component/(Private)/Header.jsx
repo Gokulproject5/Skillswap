@@ -89,7 +89,7 @@ const Header = () => {
                                         <Tooltip title={user?.name} style={"translate-y-9 "} />
                                         <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
 
-                                            <Image sizes="true"
+                                            <Image sizes="80px"
                                                 src={user?.profile_pic || '/fallback.jpg'}
                                                 alt="User"
                                                 fill
@@ -115,7 +115,7 @@ const Header = () => {
                     <div className="md:hidden flex items-center space-x-4">
                         <Link href="/profile">
                             <div className="relative h-8 w-8 overflow-hidden rounded-full border border-gray-200">
-                                <Image sizes="true" src={user?.profile_pic || "/logo.png"} alt="User" fill className="object-cover" />
+                                <Image sizes="80px" src={user?.profile_pic || "/logo.png"} alt="User" fill className="object-cover" />
                             </div>
                         </Link>
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-3xl text-gray-600">
