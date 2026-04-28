@@ -261,18 +261,23 @@ const ContextProvider = ({ children }) => {
         const videoTrack = stream.getVideoTracks()[0];
 
         if (connectionRef.current) {
-
           connectionRef.current.replaceTrack(videoTrack, screenTrack, stream);
         }
 
-        myVideo.current.srcObject = screenStream;
+        if (myVideo.current) {
+          myVideo.current.srcObject = screenStream;
+        }
+        
         setIsScreenSharing(true);
 
         screenTrack.onended = () => {
           if (connectionRef.current) {
-            connectionRef.current.replaceTrack(screenTrack, videoTrack, stream);
+            const currentVideoTrack = stream.getVideoTracks()[0];
+            connectionRef.current.replaceTrack(screenTrack, currentVideoTrack, stream);
           }
-          myVideo.current.srcObject = stream;
+          if (myVideo.current) {
+            myVideo.current.srcObject = stream;
+          }
           setIsScreenSharing(false);
         };
       } catch (error) {
@@ -287,7 +292,9 @@ const ContextProvider = ({ children }) => {
       }
 
       screenTrack.stop();
-      myVideo.current.srcObject = stream;
+      if (myVideo.current) {
+        myVideo.current.srcObject = stream;
+      }
       setIsScreenSharing(false);
     }
   }, [isScreenSharing, stream]);

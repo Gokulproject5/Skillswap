@@ -80,10 +80,11 @@ const VideoCallOverlay = () => {
   }, [remoteStream, showVideoCallUI]);
 
   useEffect(() => {
-    if (myVideo.current && stream && isCamOn) {
+   
+    if (myVideo.current && stream && isCamOn && !isScreenSharing) {
       myVideo.current.srcObject = stream;
     }
-  }, [stream, showVideoCallUI, isCamOn]);
+  }, [stream, showVideoCallUI, isCamOn, isScreenSharing]);
 
 
   return (
@@ -151,7 +152,7 @@ const VideoCallOverlay = () => {
 
 
             <div className='w-full h-full overflow-hidden relative'>
-                <video
+                 <video
                 key={remoteStream?.id || 'remote-video'}
                 playsInline
                 ref={(el) => {
@@ -162,11 +163,21 @@ const VideoCallOverlay = () => {
                 }}
                 autoPlay
                 onCanPlay={(e) => e.target.play().catch(err => console.error("Remote video play failed:", err))}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain bg-black"
               />
-                <div className={`absolute bottom-10 z-10 left-2 rounded-full px-3 py-3 text-[10px] bg-black/60 text-white backdrop-blur-sm ${isMinimized ? 'bottom-2 scale-75 origin-left' : ''}`}>
-                  <span>{call.name || 'Remote User'}</span>
+                <div className={`absolute bottom-6 z-10 left-6 rounded-full px-4 py-2 text-xs bg-black/40 text-white backdrop-blur-md border border-white/10 ${isMinimized ? 'bottom-2 scale-75 origin-left' : ''}`}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span>{call.name || 'Remote User'}</span>
+                  </div>
                 </div>
+                
+                {isScreenSharing && !isMinimized && (
+                  <div className="absolute top-6 left-6 z-20 flex items-center gap-2 bg-blue-500/20 backdrop-blur-md text-blue-400 px-4 py-2 rounded-full border border-blue-500/30">
+                    <PresentationIcon className='w-5 h-5' size={16} />
+                    {/* <span className="text-xs font-medium uppercase tracking-wider">You are presenting</span> */}
+                  </div>
+                )}
             </div>
 
               <div className={`absolute inset-0 ${!isCalling || callAccepted ? "-z-10" : "z-10"} flex items-center justify-center bg-gray-900 pointer-events-none`}>
@@ -184,32 +195,35 @@ const VideoCallOverlay = () => {
               <motion.div
                 drag
                 dragConstraints={isMinimized ? { left: 0, right: 0, top: 0, bottom: 0 } : { left: -800, right: 0, top: 0, bottom: 450 }}
-                className={`absolute top-4 right-4 md:top-6 md:right-6 aspect-video bg-gray-800 rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 cursor-move z-30 transition-all ${isMinimized ? 'w-24 top-2 right-2 border-none shadow-none' : 'w-28 md:w-70'}`}
+                className={`absolute top-4 right-4 md:top-6 md:right-6 aspect-video bg-gray-800 rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 cursor-move z-30 transition-all ${isMinimized ? 'w-24 top-2 right-2 border-none shadow-none' : 'w-28 md:w-72'}`}
               >
                 {isCamOn ? (
                   <div className='relative w-full h-full overflow-hidden rounded-lg'>
                     <video
-                      key={stream?.id || 'local-video'}
+                      key={isScreenSharing ? 'screen-video' : (stream?.id || 'local-video')}
                       playsInline
                       muted
                       ref={(el) => {
                         myVideo.current = el;
-                        if (el && stream) {
-                          el.srcObject = stream;
+                        if (el) {
+                          if (isScreenSharing && myVideo.current.srcObject) {
+                          } else if (stream) {
+                            el.srcObject = stream;
+                          }
                         }
                       }}
                       autoPlay
                       onCanPlay={(e) => e.target.play().catch(err => console.error("Local video play failed:", err))}
-                      className="w-full h-full object-cover scale-x-[-1]"
+                      className={`w-full h-full object-contain bg-black ${isScreenSharing ? '' : 'scale-x-[-1]'}`}
                     />
                    
-                    <div className='absolute bottom-2 truncate w-20 left-2 rounded-full px-3 py-1 text-[10px] bg-black/60 text-white backdrop-blur-sm'>
-                      <span>{user.name}</span>
+                    <div className='absolute bottom-2 left-2 rounded-full px-3 py-1 text-[10px] bg-black/60 text-white backdrop-blur-sm'>
+                      <span>{isScreenSharing ? 'Your Screen' : user.name}</span>
                     </div>
                   </div>
                 ) : (
-                  <div className='relative w-full h-full bg-gray-800 flex items-center justify-center aspect-video rounded-lg'>
-                    <div className='w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center text-xl text-white'>
+                  <div className='relative w-full h-full bg-gray-900 flex items-center justify-center aspect-video rounded-lg'>
+                    <div className='w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center text-xl text-white border border-white/10'>
                       {user.name?.charAt(0).toUpperCase()}
                     </div>
                     <div className='absolute bottom-2 left-2 rounded-full px-3 py-1 text-[10px] bg-black/60 text-white backdrop-blur-sm'>
