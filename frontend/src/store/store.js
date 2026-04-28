@@ -15,6 +15,7 @@ import jobsReducer from "@/feature/jobSlice";
 import userDatasReducer from "@/feature/userSlice";
 import loginDataReducer from "@/feature/loginSlice";
 import requestReducer from "@/feature/requestSlice";
+import exchangeReducer from "@/feature/exchangeSlice";
 
 const rootReducer = combineReducers({
   notify: notifyReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   userDatas: userDatasReducer,
   loginData: loginDataReducer,
   request: requestReducer,
+  exchange: exchangeReducer,
 });
 
 const persistConfig = {

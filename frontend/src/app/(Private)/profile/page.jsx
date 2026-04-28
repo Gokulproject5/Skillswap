@@ -90,7 +90,7 @@ const Profile = () => {
             <div className="px-6 pb-6">
               <div className="flex justify-between items-start">
                 <div className="relative -mt-24 mb-4">
-                  <div className="w-40 h-40 rounded-full border-4 border-white overflow-hidden bg-white shadow-sm">
+                  <div className="w-40 h-40 capitalize rounded-full border-4 border-white overflow-hidden bg-white shadow-sm">
                     <img
                       src={user?.profile_pic || "/fallback.jpg"}
                       alt={user?.name || "user"}
@@ -114,7 +114,7 @@ const Profile = () => {
 
                   </div>
                   <p className="text-base text-slate-700 leading-tight mt-1">{user?.exp || ""}</p>
-                  <div className="mt-2 flex flex-wrap gap-2 text-sm text-slate-500">
+                  <div className="mt-2 flex capitalize flex-wrap gap-2 text-sm text-slate-500">
                     <span>{user?.loc}</span>
 
                   </div>

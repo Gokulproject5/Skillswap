@@ -1,6 +1,6 @@
 "use client"
 import { useAuth } from '@/Context/authContext';
-import { setRequest } from '@/feature/requestSlice';
+import { setRequest, setSentRequests, removeSentRequest } from '@/feature/requestSlice';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
@@ -78,9 +78,9 @@ const SentCard = ({ name, proposal, skill, img, slug, status, onCancel, requestI
 
 
 const Page = () => {
-  const { user } = useAuth();
+  const { user, refreshSession } = useAuth();
   const incoming = useSelector((state) => state?.request?.RequestData) || [];
-  const [sentRequests, setSentRequests] = useState([]);
+  const sentRequests = useSelector((state) => state?.request?.sentRequests) || [];
   const dispatch = useDispatch();
   const API = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -96,6 +96,7 @@ const Page = () => {
       if (!response.ok) return toast.error("Something went wrong");
       toast.success("Request accepted 🎉");
       dispatch(setRequest(incoming.filter(r => r._id !== requestId)));
+      refreshSession();
     } catch (error) {
       toast.error("Failed to accept request");
     }
@@ -129,7 +130,7 @@ const Page = () => {
       });
       if (!response.ok) return toast.error("Failed to cancel");
       toast.success("Proposal cancelled");
-      setSentRequests(prev => prev.filter(r => r._id !== requestId));
+      dispatch(removeSentRequest(requestId));
     } catch (error) {
       toast.error("Error cancelling proposal");
     }
@@ -163,7 +164,7 @@ const Page = () => {
           credentials: "include"
         });
         const result = await res.json();
-        setSentRequests(Array.isArray(result) ? result : []);
+        dispatch(setSentRequests(Array.isArray(result) ? result : []));
       } catch (e) {
         console.log("sent fetch error:", e);
       }

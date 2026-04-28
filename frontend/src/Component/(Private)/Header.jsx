@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Tooltip from "./Tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,10 +9,8 @@ import { navItems } from "@/Data/navItems";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import Input from './Input';
 import { LogOut } from "lucide-react";
-import { clearUser } from "@/feature/loginSlice";
 import { HiMiniUsers } from "react-icons/hi2";
 import { useAuth } from "@/Context/authContext";
-import { clearNotifications } from "@/feature/notifySlice";
 
 
 const Header = () => {

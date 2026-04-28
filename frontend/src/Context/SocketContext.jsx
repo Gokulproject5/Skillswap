@@ -7,6 +7,10 @@ import { useAuth } from './authContext';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '@/feature/notifySlice';
+import { addJob } from '@/feature/jobSlice';
+import { addRequest, removeSentRequest } from '@/feature/requestSlice';
+import { updateExchange } from '@/feature/exchangeSlice';
+import { addUser, updateUserInList } from '@/feature/userSlice';
 
 const SocketContext = createContext();
 
@@ -16,7 +20,7 @@ if (typeof window !== 'undefined') {
 }
 
 const ContextProvider = ({ children }) => {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, refreshSession } = useAuth();
   const dispatch = useDispatch();
 
   const [stream, setStream] = useState(null);
@@ -34,7 +38,7 @@ const ContextProvider = ({ children }) => {
   const connectionRef = useRef();
   const mediaPromiseRef = useRef(null);
 
-  // Corrected STUN server 
+  // STUN server 
   const peerConfig = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -75,12 +79,72 @@ const ContextProvider = ({ children }) => {
       dispatch(addNotification(data));
     });
 
+    socket.on('newJobPost', (data) => {
+      console.log("[Socket] New job post received:", data);
+      dispatch(addJob(data));
+      if (typeof window !== 'undefined' && window.location.pathname !== '/jobs') {
+        toast.success(`New Job Opportunity: ${data.role}`, { icon: '💼' });
+      }
+    });
+
+    socket.on('newJobPostPending', (data) => {
+      console.log("[Socket] New pending job post:", data);
+      if (currentUser?.role === 'admin') {
+        toast.success(`New job post pending approval: ${data.role}`, { icon: '📝' });
+      }
+    });
+
+    socket.on('newRequest', (data) => {
+      console.log("[Socket] New connection request received:", data);
+      dispatch(addRequest(data));
+    });
+
+    socket.on('requestAccepted', (data) => {
+      console.log("[Socket] Request accepted:", data);
+      dispatch(removeSentRequest(data.requestId));
+      refreshSession();
+    });
+
+    socket.on('requestRejected', (data) => {
+      console.log("[Socket] Request rejected:", data);
+      dispatch(removeSentRequest(data.requestId));
+    });
+
+    socket.on('exchangeUpdated', (data) => {
+      console.log("[Socket] Exchange updated:", data);
+      dispatch(updateExchange(data));
+      refreshSession();
+    });
+
+    socket.on('newUser', (data) => {
+      console.log("[Socket] New user joined:", data);
+      if (data._id !== currentUser?._id) {
+        dispatch(addUser(data));
+      }
+    });
+
+    socket.on('userUpdated', (data) => {
+      console.log("[Socket] User updated:", data);
+      dispatch(updateUserInList(data));
+      if (data._id === currentUser?._id) {
+        refreshSession();
+      }
+    });
+
     return () => {
       socket.off('callUser');
       socket.off('callAccepted');
       socket.off('callEnded');
       socket.off('receiveMessage');
       socket.off('notification');
+      socket.off('newJobPost');
+      socket.off('newJobPostPending');
+      socket.off('newRequest');
+      socket.off('requestAccepted');
+      socket.off('requestRejected');
+      socket.off('exchangeUpdated');
+      socket.off('newUser');
+      socket.off('userUpdated');
     };
   }, [currentUser]);
 

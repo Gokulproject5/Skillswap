@@ -29,6 +29,11 @@ export const Request = async (req, res) => {
         });
 
         await newRequest.save();
+
+        const populatedRequest = await ConnectionRequest.findById(newRequest._id)
+            .populate('sender', 'name skills profile_pic seeking slug');
+        
+        sendNotification(receiverId, "newRequest", populatedRequest);
         
         sendNotification(receiverId, "notification", {
             title: "New Skill Swap Request",
@@ -110,6 +115,11 @@ export const handleRequest = async (req, res) => {
                 });
             }
 
+            sendNotification(requestDoc.sender.toString(), "requestAccepted", {
+                requestId: requestDoc._id,
+                receiver: receiverUser
+            });
+
             sendNotification(requestDoc.sender.toString(), "notification", {
                 title: "Request Accepted 🎉",
                 message: "Your skill swap request was accepted! Go to Exchanges to get started.",
@@ -118,6 +128,10 @@ export const handleRequest = async (req, res) => {
         } else {
             requestDoc.status = 'rejected';
             await requestDoc.save();
+
+            sendNotification(requestDoc.sender.toString(), "requestRejected", {
+                requestId: requestDoc._id
+            });
 
             sendNotification(requestDoc.sender.toString(), "notification", {
                 title: "Request Declined",

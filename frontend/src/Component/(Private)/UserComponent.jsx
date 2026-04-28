@@ -2,16 +2,19 @@ import React from 'react';
 import Image from 'next/image';
 import { BiUserCheck } from 'react-icons/bi';
 import Link from 'next/link';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiCheck } from 'react-icons/fi';
+import { useAuth } from '@/Context/authContext';
 
 const UserCard = ({ user, Loading }) => {
+  const { user: currentUser } = useAuth();
 
+  const mySeeking = currentUser?.seeking || [];
+  const matchCount = (user.skills || []).filter(s => mySeeking.includes(s)).length;
 
   return (
-
-    <div className='text-gray-600  w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-2 shadow-sm hover:shadow-xl bg-white border border-gray-100 duration-300 group transition-all'>
-
-      <div className='space-y-4'>
+    <div className={`text-gray-600 w-full min-h-full p-5 rounded-md flex flex-col justify-between space-y-2 shadow-sm hover:shadow-xl bg-white border duration-300 group transition-all ${matchCount > 0 ? 'border-blue-200 bg-blue-50/5' : 'border-gray-100'}`}>
+    
+      <div className='space-y-4 relative'>
         {/* Header Section */}
         <div className='flex items-center space-x-3'>
           <div className='relative w-12 h-12 overflow-hidden rounded-full border-2 border-gray-50 bg-gray-50 shrink-0 shadow-sm'>

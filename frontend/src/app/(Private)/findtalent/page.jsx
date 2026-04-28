@@ -42,22 +42,41 @@ const Page = () => {
   };
 
 
-  //  Filter Logic 
-  const filteredUsers = userData.filter((user) => {
-    const userSkills = user.skills || [];
-    const username = user.username || "";
+  //  Filter
+  const filteredUsers = userData.filter((u) => {
+    const userSkills = u.skills || [];
+    const userSeeking = u.seeking || [];
+    const name = u.name || "";
+    const experience = u.exp || "";
 
-    const matchesCategory = isActive === "All" || userSkills.includes(isActive);
+    const matchesCategory = isActive === "All" || userSkills.includes(isActive) || userSeeking.includes(isActive);
 
     const matchesSearch = debouncedValue
-      ? username.toLowerCase().includes(debouncedValue.toLowerCase()) ||
-      userSkills.some(skill => skill.toLowerCase().includes(debouncedValue.toLowerCase()))
+      ? name.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+      experience.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+      userSkills.some(skill => skill.toLowerCase().includes(debouncedValue.toLowerCase())) ||
+      userSeeking.some(skill => skill.toLowerCase().includes(debouncedValue.toLowerCase()))
       : true;
 
     return matchesCategory && matchesSearch;
+  }).sort((a, b) => {
+    const mySeeking = user?.seeking || [];
+    
+    const userSkill = (a.skills || []).filter(s => mySeeking.includes(s)).length;
+    const otherUserSkill = (b.skills || []).filter(s => mySeeking.includes(s)).length;
+
+    if (otherUserSkill !== userSkill) {
+      return otherUserSkill - userSkill; 
+    }
+
+    const mySkills = user?.skills || [];
+    const mutualA = (a.seeking || []).filter(s => mySkills.includes(s)).length;
+    const mutualB = (b.seeking || []).filter(s => mySkills.includes(s)).length;
+
+    return mutualB - mutualA;
   });
 
-  const searchBtn = ["All", "UI/UX Design", "Data science", "Marketing", "Developer"];
+  const searchBtn = ["All",  "React", "Node.js", "Python", "Cloud"];
 
   return (
     <>
@@ -78,10 +97,12 @@ const Page = () => {
             <div className='w-full lg:flex-1'>
 
               <Input
-                type="search"
-                placeholder="Search your interest skill"
-                onChange={handleSearch}
-                value={text}
+                value={{
+                  type: "search",
+                  placeholder: "Search talent by name, skill, or experience...",
+                  onchange: handleSearch,
+                  value: text
+                }}
               />
             </div>
 

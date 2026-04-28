@@ -3,6 +3,7 @@ import '../utils/loadEnv.js';
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken"
 import User from "../models/user.model.js";
+import { broadcast } from "../service/Socket.js";
 
 
 // get user from db 
@@ -68,6 +69,10 @@ export const createUser = async (req, res) => {
             message: "User Created successfull", _id
         });
 
+        const broadcastUser = { ...response.toObject() };
+        delete broadcastUser.password;
+        broadcast("newUser", broadcastUser);
+
     } catch (err) {
         res.status(500).json({
             message: "error in server", err
@@ -93,6 +98,10 @@ export const updateUser = async (req, res) => {
                 message: "User not found"
             });
         }
+
+        const updatedUser = await User.findById(id || req.body._id).lean();
+        const { password, ...userWithoutPassword } = updatedUser;
+        broadcast("userUpdated", userWithoutPassword);
 
         res.status(200).json({
             message: "Update success"

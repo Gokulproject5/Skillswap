@@ -18,6 +18,15 @@ export const sendNotification = (userId, eventName, payload) => {
     }
 };
 
+export const broadcast = (eventName, payload) => {
+    console.log(`[Socket] Broadcasting ${eventName}`);
+    if (!ioInstance) {
+        console.log(`[Socket] ioInstance not available`);
+        return;
+    }
+    ioInstance.emit(eventName, payload);
+};
+
 export const initSocket = (server) => {
     const io = new Server(server, {
         cors: {

@@ -65,6 +65,13 @@ export const createExchange = async (req, res) => {
             checklist
         });
 
+        const populatedExchange = await Exchange.findById(exchange._id)
+            .populate('userA', 'name profile_pic slug loyaltyPoints badge exchangesCompleted')
+            .populate('userB', 'name profile_pic slug loyaltyPoints badge exchangesCompleted');
+
+        sendNotification(exchange.userA.toString(), "exchangeUpdated", populatedExchange);
+        sendNotification(exchange.userB.toString(), "exchangeUpdated", populatedExchange);
+
         res.status(201).json(exchange);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -137,7 +144,14 @@ export const tickChecklistItem = async (req, res) => {
         recalcProgress(exchange);
         await exchange.save();
 
-        res.json({ exchange, pointsChanged: wasCompleted ? -POINTS.CHECKLIST_ITEM : POINTS.CHECKLIST_ITEM });
+        const populatedExchange = await Exchange.findById(exchange._id)
+            .populate('userA', 'name profile_pic slug loyaltyPoints badge exchangesCompleted')
+            .populate('userB', 'name profile_pic slug loyaltyPoints badge exchangesCompleted');
+
+        sendNotification(exchange.userA.toString(), "exchangeUpdated", populatedExchange);
+        sendNotification(exchange.userB.toString(), "exchangeUpdated", populatedExchange);
+
+        res.json({ exchange: populatedExchange, pointsChanged: wasCompleted ? -POINTS.CHECKLIST_ITEM : POINTS.CHECKLIST_ITEM });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -165,7 +179,15 @@ export const addChecklistItem = async (req, res) => {
 
         recalcProgress(exchange);
         await exchange.save();
-        res.json(exchange);
+
+        const populatedExchange = await Exchange.findById(exchange._id)
+            .populate('userA', 'name profile_pic slug loyaltyPoints badge exchangesCompleted')
+            .populate('userB', 'name profile_pic slug loyaltyPoints badge exchangesCompleted');
+
+        sendNotification(exchange.userA.toString(), "exchangeUpdated", populatedExchange);
+        sendNotification(exchange.userB.toString(), "exchangeUpdated", populatedExchange);
+
+        res.json(populatedExchange);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -235,7 +257,15 @@ export const markComplete = async (req, res) => {
         }
 
         await exchange.save();
-        res.json(exchange);
+
+        const populatedExchange = await Exchange.findById(exchange._id)
+            .populate('userA', 'name profile_pic slug loyaltyPoints badge exchangesCompleted')
+            .populate('userB', 'name profile_pic slug loyaltyPoints badge exchangesCompleted');
+
+        sendNotification(exchange.userA.toString(), "exchangeUpdated", populatedExchange);
+        sendNotification(exchange.userB.toString(), "exchangeUpdated", populatedExchange);
+
+        res.json(populatedExchange);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

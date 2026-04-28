@@ -6,6 +6,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { CheckCircle2, Circle, Flag, X, ChevronDown, ChevronUp, Plus, Star } from "lucide-react";
 import { LiaNotesMedicalSolid } from "react-icons/lia";
+import { useDispatch, useSelector } from "react-redux";
+import { setExchanges, updateExchange, setLoading as setExchangeLoading } from "@/feature/exchangeSlice";
 
 const API = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -287,16 +289,19 @@ const ExchangeCard = ({ exchange, currentUserId, onTick, onComplete, onReport, o
 
 export default function ExchangePage() {
   const { user } = useAuth();
-  const [exchanges, setExchanges] = useState([]);
+  const dispatch = useDispatch();
+  const exchanges = useSelector((state) => state.exchange.exchanges) || [];
+  const loading = useSelector((state) => state.exchange.loading);
   const [leaderboard, setLeaderboard] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("active");
 
-  const fetchExchanges = () =>
+  const fetchExchanges = () => {
+    dispatch(setExchangeLoading(true));
     fetch(`/api/exchange/my`, { credentials: "include" })
       .then(r => r.json())
-      .then(data => setExchanges(Array.isArray(data) ? data : []))
-      .finally(() => setLoading(false));
+      .then(data => dispatch(setExchanges(Array.isArray(data) ? data : [])))
+      .finally(() => dispatch(setExchangeLoading(false)));
+  };
 
   const fetchLeaderboard = () =>
     fetch(`/api/exchange/leaderboard`, { credentials: "include" })
@@ -313,7 +318,7 @@ export default function ExchangePage() {
       });
       const data = await res.json();
       if (!res.ok) return toast.error(data.message || "Cannot tick this task");
-      setExchanges(prev => prev.map(e => e._id === data.exchange._id ? data.exchange : e));
+      dispatch(updateExchange(data.exchange));
       if (data.pointsChanged > 0) toast.success(`+${data.pointsChanged} loyalty points ✅`);
       else toast(`Task unchecked (${data.pointsChanged} pts)`, { icon: '↩️' });
     } catch { toast.error("Failed to update"); }
@@ -327,7 +332,7 @@ export default function ExchangePage() {
       });
       const updated = await res.json();
       if (!res.ok) return toast.error(updated.message || "Failed");
-      setExchanges(prev => prev.map(e => e._id === updated._id ? updated : e));
+      dispatch(updateExchange(updated));
       toast.success("Task added");
     } catch { toast.error("Failed to add task"); }
   };
@@ -340,7 +345,7 @@ export default function ExchangePage() {
       });
       const data = await res.json();
       if (!res.ok) return toast.error(data.message || "Cannot complete yet");
-      setExchanges(prev => prev.map(e => e._id === data._id ? data : e));
+      dispatch(updateExchange(data));
       if (data.status === 'completed') { toast.success("🎉 Exchange complete! +50 loyalty points!"); fetchLeaderboard(); }
       else toast.success("Marked — waiting for partner to confirm");
     } catch { toast.error("Failed"); }

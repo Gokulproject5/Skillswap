@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@/Context/authContext";
 import { setRequest } from "@/feature/requestSlice";
+import { setExchanges, setLoading as setExchangeLoading } from "@/feature/exchangeSlice";
 import toast from "react-hot-toast";
 
 const API = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -13,9 +14,9 @@ export default function Dashboard() {
   const { user } = useAuth();
   const dispatch = useDispatch();
   const requests = useSelector((state) => state.request.RequestData) || [];
+  const exchanges = useSelector((state) => state.exchange.exchanges) || [];
+  const loadingExchanges = useSelector((state) => state.exchange.loading);
 
-  const [exchanges, setExchanges] = useState([]);
-  const [loadingExchanges, setLoadingExchanges] = useState(true);
   const [loadingRequests, setLoadingRequests] = useState(true);
 
   useEffect(() => {
@@ -28,12 +29,13 @@ export default function Dashboard() {
   }, [user?._id]);
 
   useEffect(() => {
+    dispatch(setExchangeLoading(true));
     fetch(`/api/exchange/my`, { credentials: "include" })
       .then(r => r.json())
-      .then(data => setExchanges(Array.isArray(data) ? data.filter(e => e.status === "active") : []))
+      .then(data => dispatch(setExchanges(Array.isArray(data) ? data.filter(e => e.status === "active") : [])))
       .catch(() => { })
-      .finally(() => setLoadingExchanges(false));
-  }, []);
+      .finally(() => dispatch(setExchangeLoading(false)));
+  }, [dispatch]);
 
   const handleRequest = async (requestId, action) => {
     try {
@@ -141,7 +143,7 @@ export default function Dashboard() {
         </div>
 
         {/* Pending Requests */}
-        <div className="bg-white border-2 border-dashed border-gray-300 rounded-2xl shadow-sm p-5 md:p-6 flex flex-col gap-4">
+        <div className="bg-white border-2 border-dashed border-gray-300 rounded-2xl shadow-sm p-5 md:p-6 flex flex-col gap-4 h-fit self-start">
           <div className="flex justify-between items-center">
             <h3 className="font-bold text-gray-800">Pending Requests</h3>
             {requests.length > 0 && (
@@ -151,7 +153,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          <div className="space-y-3 flex-1">
+          <div className="space-y-3">
             {loadingRequests ? (
               <div className="space-y-3">
                 {[1, 2].map(i => <div key={i} className="h-16 rounded-xl bg-gray-100 animate-pulse" />)}
@@ -187,9 +189,11 @@ export default function Dashboard() {
             )}
           </div>
 
-          <Link href="/request" className="w-full py-2.5 text-xs font-semibold bg-blue-600 rounded-lg text-center text-white active:scale-99 transition-all shadow-md shadow-blue-100">
-            View All Requests
-          </Link>
+          {requests.length > 0 && (
+            <Link href="/request" className="w-full py-2.5 text-xs font-semibold bg-blue-600 rounded-lg text-center text-white active:scale-99 transition-all shadow-md shadow-blue-100">
+              View All Requests
+            </Link>
+          )}
         </div>
 
       </section>

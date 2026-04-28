@@ -10,6 +10,7 @@ const Input = ({ value }) => {
           placeholder={value.placeholder}
           className="w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-500 text-base md:text-sm font-medium"
           onChange={value.onchange}
+          value={value.value}
         />
       </div>
     </div>

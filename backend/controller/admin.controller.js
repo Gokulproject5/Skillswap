@@ -1,6 +1,7 @@
 import job_post from "../models/jobPost.model.js"
 import User from "../models/user.model.js"
 import Exchange from "../models/exchange.model.js"
+import { broadcast } from "../service/Socket.js"
 
 
 // get job post for approvals
@@ -38,6 +39,8 @@ export const updateJob = async (req, res) => {
             });
         }
 
+        const updatedJob = await job_post.findById(id).lean();
+        broadcast("newJobPost", updatedJob);
 
         return res.status(200).json({ message: "updated" });
 

@@ -1,5 +1,6 @@
 import job_post from "../models/jobPost.model.js";
 import '../utils/loadEnv.js'
+import { broadcast } from "../service/Socket.js";
 
 // create post 
 export const CreateJobPost = async (req, res) => {
@@ -37,6 +38,9 @@ export const CreateJobPost = async (req, res) => {
         if (!res) {
             return res.status(400).json({ message: "Failed to Upload" })
         }
+
+        broadcast("newJobPostPending", sansitizeInput);
+
         res.status(201).json({ message: "Job post created successfully ", sansitizeInput })
     } catch (err) {
         res.status(500).json({ message: "Internal server error" })
