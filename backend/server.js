@@ -17,6 +17,7 @@ import passport from "passport";
 import User from "./models/user.model.js";
 import { Oauth } from "./middleware/oAuth.js"
 import session from "express-session";
+import { live } from "./routes/live.route.js";
 
 
 
@@ -95,6 +96,7 @@ app.use('/admin', adminRouter);
 app.use('/request', request);
 app.use('/message', messageRoute);
 app.use('/exchange', exchangeRoute);
+app.use('/live', live)
 
 const server = http.createServer(app);
 initSocket(server)
@@ -106,3 +108,6 @@ app.get("/dashboard", auth, (req, res) => {
 server.listen(port, () => {
     console.log(`Server running on port ${port} (Production: ${isProduction})`);
 });
+
+
+

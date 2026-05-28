@@ -46,7 +46,6 @@ const SignUpCard = () => {
         };
         const slug = slugify(Formdata.fullname);
         const data = {...Formdata,slug}
-        const api_base_url = process.env.NEXT_PUBLIC_API_BASE_URL
         try {
             const res = await fetch(`/api/register`, {
                 method: "POST",
