@@ -429,64 +429,6 @@ skillswap/
 
 ---
 
-## 📡 API Reference
-
-### Authentication
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/register` | Create new user account | ❌ |
-| `POST` | `/login` | Authenticate & receive JWT | ❌ |
-| `GET` | `/auth/google` | Initiate Google OAuth flow | ❌ |
-| `GET` | `/auth/google/callback` | OAuth callback handler | ❌ |
-
-### User Management
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `GET` | `/user/profile` | Get authenticated user profile | ✅ |
-| `PUT` | `/user/update` | Update profile & skills | ✅ |
-| `GET` | `/user/search` | Search users by skills | ✅ |
-
-### Connection Requests
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/request/send` | Send connection request | ✅ |
-| `PUT` | `/request/accept` | Accept a pending request | ✅ |
-| `PUT` | `/request/reject` | Reject a pending request | ✅ |
-| `GET` | `/request/pending` | List pending requests | ✅ |
-
-### Skill Exchange
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/exchange/create` | Start a new exchange | ✅ |
-| `PUT` | `/exchange/update` | Update exchange progress | ✅ |
-| `GET` | `/exchange/active` | List active exchanges | ✅ |
-
-### Messaging
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `GET` | `/message/:userId` | Get chat history with user | ✅ |
-| `POST` | `/message/send` | Send a message | ✅ |
-
-### Job Postings
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `GET` | `/job_post` | List approved job postings | ✅ |
-| `POST` | `/job_post/create` | Submit a new job posting | ✅ |
-
-### Admin
-
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `GET` | `/admin/jobs/pending` | List pending job approvals | ✅ Admin |
-| `PUT` | `/admin/jobs/approve` | Approve a job posting | ✅ Admin |
-| `PUT` | `/admin/jobs/reject` | Reject a job posting | ✅ Admin |
-
 ### WebSocket Events
 
 | Event | Direction | Description |
@@ -600,11 +542,8 @@ User Posts Job → Status: "pending"
 ## 🗺️ Roadmap
 
 - [ ] AI-powered skill matching recommendations
-- [ ] Gamification & achievement badges
-- [ ] Group skill exchange sessions
 - [ ] Mobile application (React Native)
 - [ ] Advanced analytics dashboard
-- [ ] Full social feed with posts & comments
 - [ ] Multi-language support
 
 ---
